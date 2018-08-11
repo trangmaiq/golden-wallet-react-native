@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "301776301697",
+    "firebase_url": "https://golden-b6401.firebaseio.com",
+    "project_id": "golden-b6401",
+    "storage_bucket": "golden-b6401.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:301776301697:android:cb4cf8a4bba5370c",
+        "android_client_info": {
+          "package_name": "io.goldenwallet"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "301776301697-fmivoj6qgr91ie4itfauhdlan3fko11j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAFgUTspmJ-79Vk59036FtCcfNMh6VFSUc"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

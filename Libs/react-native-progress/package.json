@@ -1,0 +1,77 @@
+{
+  "name": "react-native-progress",
+  "version": "3.5.0",
+  "description": "Progress indicators and spinners for React Native using ReactART",
+  "main": "index.js",
+  "scripts": {
+    "test": "eslint *.js Shapes",
+    "format": "./node_modules/.bin/prettier --write {,Shapes/,Example/}*.js"
+  },
+  "keywords": [
+    "react-native",
+    "react-component",
+    "react-native-component",
+    "react",
+    "mobile",
+    "ios",
+    "ui",
+    "progress",
+    "progressindicator",
+    "circle",
+    "pie",
+    "bar",
+    "progressbar",
+    "indeterminate",
+    "spinner",
+    "animation"
+  ],
+  "author": {
+    "name": "Joel Arvidsson",
+    "email": "joel@oblador.se"
+  },
+  "homepage": "https://github.com/oblador/react-native-progress",
+  "bugs": {
+    "url": "https://github.com/oblador/react-native-progress/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/oblador/react-native-progress.git"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "babel": "^6.5.2",
+    "babel-eslint": "^7.0.0",
+    "eslint": "^3.7.1",
+    "eslint-config-airbnb": "^12.0.0",
+    "eslint-config-prettier": "^2.9.0",
+    "eslint-plugin-import": "^1.16.0",
+    "eslint-plugin-jsx-a11y": "^2.2.3",
+    "eslint-plugin-prettier": "^2.6.0",
+    "eslint-plugin-react": "^6.4.1",
+    "prettier": "^1.13.3"
+  },
+  "dependencies": {
+    "prop-types": "^15.5.8"
+  },
+  "typings": "index.d.ts",
+  "react-native": {
+    "crypto": "react-native-crypto",
+    "_stream_transform": "readable-stream/transform",
+    "_stream_readable": "readable-stream/readable",
+    "_stream_writable": "readable-stream/writable",
+    "_stream_duplex": "readable-stream/duplex",
+    "_stream_passthrough": "readable-stream/passthrough",
+    "stream": "stream-browserify",
+    "vm": "vm-browserify"
+  },
+  "browser": {
+    "crypto": "react-native-crypto",
+    "_stream_transform": "readable-stream/transform",
+    "_stream_readable": "readable-stream/readable",
+    "_stream_writable": "readable-stream/writable",
+    "_stream_duplex": "readable-stream/duplex",
+    "_stream_passthrough": "readable-stream/passthrough",
+    "stream": "stream-browserify",
+    "vm": "vm-browserify"
+  }
+}

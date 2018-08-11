@@ -1,0 +1,57 @@
+{
+  "_from": "@remobile/react-native-qrcode-local-image",
+  "_id": "@remobile/react-native-qrcode-local-image@1.0.4",
+  "_inBundle": false,
+  "_integrity": "sha512-tM+komoSgcS+7UzdH0MP2gF0yR8Hc8Dfe3P2iIlQhXyQdHaEVn1dyO6sw+McGfEj+n2DdsP2YXb8g16gW7qcKg==",
+  "_location": "/@remobile/react-native-qrcode-local-image",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "tag",
+    "registry": true,
+    "raw": "@remobile/react-native-qrcode-local-image",
+    "name": "@remobile/react-native-qrcode-local-image",
+    "escapedName": "@remobile%2freact-native-qrcode-local-image",
+    "scope": "@remobile",
+    "rawSpec": "",
+    "saveSpec": null,
+    "fetchSpec": "latest"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/@remobile/react-native-qrcode-local-image/-/react-native-qrcode-local-image-1.0.4.tgz",
+  "_shasum": "471e14ca6be6852578e0ca63c2a8bf67a61b4e47",
+  "_spec": "@remobile/react-native-qrcode-local-image",
+  "_where": "/Users/tranviet/Data/Source/React-Native/qrcodescanner",
+  "author": {
+    "name": "YunJiang.Fang",
+    "email": "42550564@qq.com"
+  },
+  "bugs": {
+    "url": "https://github.com/remobile/react-native-qrcode-local-image/issues"
+  },
+  "bundleDependencies": false,
+  "deprecated": false,
+  "description": "A local qrcode image parse for react-native, support for ios and android",
+  "homepage": "https://github.com/remobile/react-native-qrcode-local-image",
+  "keywords": [
+    "react-native",
+    "react-component",
+    "ios",
+    "android",
+    "qrcode",
+    "local-image",
+    "remobile",
+    "mobile"
+  ],
+  "license": "MIT",
+  "main": "index.js",
+  "name": "@remobile/react-native-qrcode-local-image",
+  "qrcode-local-imagecription": "A local qrcode image parse for react-native",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/remobile/react-native-qrcode-local-image.git"
+  },
+  "version": "1.0.4"
+}

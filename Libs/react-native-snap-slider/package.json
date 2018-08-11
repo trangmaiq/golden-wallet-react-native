@@ -1,0 +1,81 @@
+{
+  "_args": [
+    [
+      "react-native-snap-slider@0.3.0",
+      "/Users/hau/Desktop/StartFishWallet"
+    ]
+  ],
+  "_from": "react-native-snap-slider@0.3.0",
+  "_id": "react-native-snap-slider@0.3.0",
+  "_inBundle": false,
+  "_integrity": "sha512-tfUL3RG8u76qSFE5+C0QySD/7zyv88NbyPAkEGFYk3qkHkcYaXlej4oKSNF9rq0hneIMZVb6owdAiGp7AJODIA==",
+  "_location": "/react-native-snap-slider",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "version",
+    "registry": true,
+    "raw": "react-native-snap-slider@0.3.0",
+    "name": "react-native-snap-slider",
+    "escapedName": "react-native-snap-slider",
+    "rawSpec": "0.3.0",
+    "saveSpec": null,
+    "fetchSpec": "0.3.0"
+  },
+  "_requiredBy": [
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/react-native-snap-slider/-/react-native-snap-slider-0.3.0.tgz",
+  "_spec": "0.3.0",
+  "_where": "/Users/hau/Desktop/StartFishWallet",
+  "author": {
+    "name": "Francis Mak",
+    "email": "francis@franfran.com",
+    "url": "https://github.com/franfran"
+  },
+  "bugs": {
+    "url": "https://github.com/franfran/react-native-snap-slider/issues"
+  },
+  "description": "Provide labels and snap control for Slider",
+  "devDependencies": {
+    "create-react-class": "^15.6.2"
+  },
+  "homepage": "https://github.com/franfran/react-native-snap-slider#readme",
+  "keywords": [
+    "react-component",
+    "react-native",
+    "slider",
+    "snap",
+    "step"
+  ],
+  "license": "MIT",
+  "main": "SnapSlider.js",
+  "name": "react-native-snap-slider",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/franfran/react-native-snap-slider.git"
+  },
+  "scripts": {
+    "start": "echo \"Error: no test specified\" && exit 1"
+  },
+  "version": "0.3.0",
+  "react-native": {
+    "crypto": "react-native-crypto",
+    "_stream_transform": "readable-stream/transform",
+    "_stream_readable": "readable-stream/readable",
+    "_stream_writable": "readable-stream/writable",
+    "_stream_duplex": "readable-stream/duplex",
+    "_stream_passthrough": "readable-stream/passthrough",
+    "stream": "stream-browserify",
+    "vm": "vm-browserify"
+  },
+  "browser": {
+    "crypto": "react-native-crypto",
+    "_stream_transform": "readable-stream/transform",
+    "_stream_readable": "readable-stream/readable",
+    "_stream_writable": "readable-stream/writable",
+    "_stream_duplex": "readable-stream/duplex",
+    "_stream_passthrough": "readable-stream/passthrough",
+    "stream": "stream-browserify",
+    "vm": "vm-browserify"
+  }
+}

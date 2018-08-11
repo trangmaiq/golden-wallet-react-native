@@ -1,0 +1,7 @@
+const SAVED_ID_LOCAL = {
+  PIN_CODE: 'PIN_CODE',
+  IV_CODE: 'IV',
+  DATA_ENCRYPTED: 'USER_WALLET_ENCRYPTED'
+}
+
+export default SAVED_ID_LOCAL

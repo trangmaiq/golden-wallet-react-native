@@ -1,0 +1,81 @@
+{
+  "_from": "react-native-modalbox@1.4.2",
+  "_id": "react-native-modalbox@1.4.2",
+  "_inBundle": false,
+  "_integrity": "sha1-gYyTVMmxMyfsgHxkNuhRaztBlHg=",
+  "_location": "/react-native-modalbox",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "version",
+    "registry": true,
+    "raw": "react-native-modalbox@1.4.2",
+    "name": "react-native-modalbox",
+    "escapedName": "react-native-modalbox",
+    "rawSpec": "1.4.2",
+    "saveSpec": null,
+    "fetchSpec": "1.4.2"
+  },
+  "_requiredBy": [
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/react-native-modalbox/-/react-native-modalbox-1.4.2.tgz",
+  "_shasum": "818c9354c9b13327ec807c6436e8516b3b419478",
+  "_spec": "react-native-modalbox@1.4.2",
+  "_where": "/Users/congphuong/Desktop/RN/starfish-wallet",
+  "author": {
+    "name": "Maxime Mezrahi"
+  },
+  "bugs": {
+    "url": "https://github.com/maxs15/react-native-modalbox/issues"
+  },
+  "bundleDependencies": false,
+  "dependencies": {
+    "create-react-class": "^15.6.0",
+    "prop-types": "^15.5.10"
+  },
+  "deprecated": false,
+  "description": "A <Modal/> component for react-native",
+  "homepage": "https://github.com/maxs15/react-native-modalbox#readme",
+  "keywords": [
+    "react-component",
+    "react-native",
+    "ios",
+    "android",
+    "modal",
+    "box",
+    "modalbox",
+    "window",
+    "swipe"
+  ],
+  "license": "MIT",
+  "main": "index.js",
+  "name": "react-native-modalbox",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/maxs15/react-native-modalbox.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "version": "1.4.2",
+  "react-native": {
+    "crypto": "react-native-crypto",
+    "_stream_transform": "readable-stream/transform",
+    "_stream_readable": "readable-stream/readable",
+    "_stream_writable": "readable-stream/writable",
+    "_stream_duplex": "readable-stream/duplex",
+    "_stream_passthrough": "readable-stream/passthrough",
+    "stream": "stream-browserify",
+    "vm": "vm-browserify"
+  },
+  "browser": {
+    "crypto": "react-native-crypto",
+    "_stream_transform": "readable-stream/transform",
+    "_stream_readable": "readable-stream/readable",
+    "_stream_writable": "readable-stream/writable",
+    "_stream_duplex": "readable-stream/duplex",
+    "_stream_passthrough": "readable-stream/passthrough",
+    "stream": "stream-browserify",
+    "vm": "vm-browserify"
+  }
+}

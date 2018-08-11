@@ -1,0 +1,57 @@
+{
+  "name": "react-native-touch-id",
+  "version": "4.0.4",
+  "description": "React Native authentication with the native Touch ID popup.",
+  "scripts": {
+    "lint": "node_modules/.bin/eslint .",
+    "start": "node_modules/react-native/packager/packager.sh",
+    "test": "npm run lint"
+  },
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/naoufal/react-native-touch-id.git"
+  },
+  "keywords": [
+    "react-native",
+    "react",
+    "native",
+    "touch-id",
+    "react-component",
+    "react-native-component",
+    "authentication",
+    "auth",
+    "authenticate",
+    "mobile"
+  ],
+  "author": "Naoufal Kadhom <naoufalkadhom@gmail.com> (https://github.com/naoufal)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/naoufal/react-native-touch-id/issues"
+  },
+  "homepage": "https://github.com/naoufal/react-native-touch-id",
+  "devDependencies": {
+    "eslint": "2.0.0",
+    "eslint-plugin-react": "2.7.1"
+  },
+  "react-native": {
+    "crypto": "react-native-crypto",
+    "_stream_transform": "readable-stream/transform",
+    "_stream_readable": "readable-stream/readable",
+    "_stream_writable": "readable-stream/writable",
+    "_stream_duplex": "readable-stream/duplex",
+    "_stream_passthrough": "readable-stream/passthrough",
+    "stream": "stream-browserify",
+    "vm": "vm-browserify"
+  },
+  "browser": {
+    "crypto": "react-native-crypto",
+    "_stream_transform": "readable-stream/transform",
+    "_stream_readable": "readable-stream/readable",
+    "_stream_writable": "readable-stream/writable",
+    "_stream_duplex": "readable-stream/duplex",
+    "_stream_passthrough": "readable-stream/passthrough",
+    "stream": "stream-browserify",
+    "vm": "vm-browserify"
+  }
+}
