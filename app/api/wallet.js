@@ -61,3 +61,11 @@ export const fetchToken = (address) => {
   const url = `http://wallet.skylab.vn/balance/${address}`
   return caller.get(url, {}, true)
 }
+
+export const fetchRateETHDollar = () => {
+  const data = {
+    fsyms: 'ETH',
+    tsyms: 'BTC,USD,EUR,GBP,AUD,CAD,CNY,JPY,RUB'
+  }
+  return caller.get(`https://min-api.cryptocompare.com/data/pricemultifull`, data, true)
+}
