@@ -207,6 +207,13 @@ export default class Wallet {
     return this.totalBalanceETH.multipliedBy(rate)
   }
 
+  @computed get unspendTransactions() {
+    return this.tokens.reduce((_rs, t) => {
+      const rs = [..._rs, ...t.unspendTransactions.slice()]
+      return rs
+    }, [])
+  }
+
   findToken(tokenAddress) {
     const token = this.tokens.find(t => t.address === tokenAddress)
     return token
