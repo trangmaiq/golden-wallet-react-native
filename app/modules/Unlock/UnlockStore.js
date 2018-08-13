@@ -25,6 +25,7 @@ class UnlockStore {
   }
 
   @action handlePress(number) {
+    HapticHandler.ImpactLight()
     const { pinTyped, pincode, pinConfirm } = this.data
     if (pinTyped === 5) {
       // handle check pincode
