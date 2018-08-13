@@ -7,6 +7,7 @@ import Starypto from '../../../../Libs/react-native-starypto'
 import { toBigNumber, fromEther } from '../../../wallet/ethereum/txUtils'
 import MainStore from '../../../AppStores/MainStore'
 import constant from '../../../commons/constant'
+import NavStore from '../../../stores/NavStore'
 import SecureDS from '../../../AppStores/DataSource/SecureDS'
 import BigNumber from '../../../../node_modules/bignumber.js'
 // import NavigationStore from '../../../navigation/NavigationStore'
@@ -73,12 +74,16 @@ class SendStore {
     //     }, 50)
     //   }
     // }, true)
-    const ds = new SecureDS('111111')
-    if (!this.isToken) {
-      this.sendETH(transaction, ds)
-    } else {
-      this.sendToken(transaction, ds)
-    }
+    NavStore.lockScreen({
+      onUnlock: (pincode) => {
+        const ds = new SecureDS(pincode)
+        if (!this.isToken) {
+          this.sendETH(transaction, ds)
+        } else {
+          this.sendToken(transaction, ds)
+        }
+      }
+    }, true)
   }
 
   sendETH(transaction, ds) {
