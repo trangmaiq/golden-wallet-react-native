@@ -34,7 +34,7 @@
   self.window.rootViewController = rootViewController;
   [self.window makeKeyAndVisible];
   [Fabric with:@[[Crashlytics class]]];
-  //  [RNSplashScreen show];
+  [RNSplashScreen show];
   [FIRApp configure];
   [[UNUserNotificationCenter currentNotificationCenter] setDelegate:self];
 
