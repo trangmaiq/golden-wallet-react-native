@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import { View, Dimensions } from 'react-native'
-import PropTypes from 'prop-types'
 import Swiper from 'react-native-swiper'
 import NavigationHeader from '../../../components/elements/NavigationHeader'
 import BackupFirstStep from '../elements/BackupFirstStep'
@@ -10,17 +9,18 @@ import LayoutUtils from '../../../commons/LayoutUtils'
 import AppStyle from '../../../commons/AppStyle'
 import images from '../../../commons/images'
 import MainStore from '../../../AppStores/MainStore'
+import NavStore from '../../../stores/NavStore'
 
 const { height } = Dimensions.get('window')
 const marginTop = LayoutUtils.getExtraTop()
+
 export default class BackupScreen extends Component {
-  static propTypes = {
-    navigation: PropTypes.object.isRequired
+  constructor(props) {
+    super(props)
+    this.currentIndex = 0
   }
 
   render() {
-    const { navigation } = this.props
-    const { currentIndex } = this
     return (
       <View style={{ flex: 1, backgroundColor: AppStyle.backgroundDarkMode }}>
         <NavigationHeader
@@ -31,8 +31,8 @@ export default class BackupScreen extends Component {
             button: images.backButton
           }}
           action={() => {
-            if (currentIndex === 0) {
-              navigation.goBack()
+            if (this.currentIndex === 0) {
+              NavStore.goBack()
             } else {
               this.swiper.scrollBy(-1, true)
             }
