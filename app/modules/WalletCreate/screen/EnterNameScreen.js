@@ -17,6 +17,7 @@ import LayoutUtils from '../../../commons/LayoutUtils'
 import images from '../../../commons/images'
 import AppStyle from '../../../commons/AppStyle'
 import CreateWalletStore from '../CreateWalletStore'
+import Spinner from '../../../components/elements/Spinner'
 
 const { width } = Dimensions.get('window')
 const marginTop = LayoutUtils.getExtraTopAndroid()
@@ -59,7 +60,7 @@ export default class EnterNameScreen extends Component {
   }
 
   render() {
-    const { title } = this.createWalletStore
+    const { title, loading } = this.createWalletStore
     return (
       <SafeAreaView style={{ flex: 1 }}>
         <TouchableWithoutFeedback onPress={() => { Keyboard.dismiss() }}>
@@ -85,9 +86,9 @@ export default class EnterNameScreen extends Component {
               text="Create"
               onPress={this.handleCreate}
             />
-            {/* {loading &&
+            {loading &&
               <Spinner />
-            } */}
+            }
           </View>
         </TouchableWithoutFeedback>
       </SafeAreaView>

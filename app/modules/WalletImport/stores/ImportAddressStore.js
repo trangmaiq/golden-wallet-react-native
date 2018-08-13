@@ -6,6 +6,7 @@ import NavStore from '../../../stores/NavStore'
 export default class ImportAddressStore {
   @observable customTitle = `My wallet ${MainStore.appState.wallets.length}`
   @observable addessWallet = ''
+  @observable loading = false
 
   @action setTitle(title) {
     this.customTitle = title
@@ -23,6 +24,7 @@ export default class ImportAddressStore {
     await w.save()
     await MainStore.appState.syncWallets()
     MainStore.appState.autoSetSelectedWallet()
+    this.loading = false
     NavStore.reset()
   }
 
