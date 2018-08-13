@@ -82,7 +82,7 @@ export default class Transaction {
   }
 
   get fee() {
-    return this.gasUsed.multipliedBy(this.gasPrice).dividedBy(new BigNumber(`1.0e+24`))
+    return this.gasUsed.multipliedBy(this.gasPrice).dividedBy(new BigNumber(`1.0e+18`))
   }
 
   get balance() {
