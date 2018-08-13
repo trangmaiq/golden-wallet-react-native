@@ -97,7 +97,7 @@ class SendStore {
     HapticHandler.NotificationSuccess()
     NavStore.navigator.dispatch(NavigationActions.back())
     NavStore.navigator.dispatch(NavigationActions.back())
-    MainStore.clearSendStore()
+    // MainStore.clearSendStore()
     NavStore.popupCustom.show('Send success')
   }
 

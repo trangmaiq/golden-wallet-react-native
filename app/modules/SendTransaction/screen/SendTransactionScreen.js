@@ -92,7 +92,7 @@ export default class SendTransactionScreen extends Component {
 
   _onCancelTrasaction = () => {
     this.props.navigation.dispatch(NavigationActions.back())
-    MainStore.clearSendStore()
+    // MainStore.clearSendStore()
   }
 
   _onSendPress = () => {
