@@ -18,5 +18,5 @@ Pod::Spec.new do |s|
   s.static_framework = true
 
   s.dependency 'React'
-  s.dependency 'TrezorCrypto'
+  s.dependency 'TrezorCrypto', '0.0.6'
 end
