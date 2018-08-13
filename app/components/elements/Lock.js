@@ -72,7 +72,7 @@ export default class Lock extends Component {
 
   _handlePressPin(num) {
     HapticHandler.ImpactLight()
-    const { pinTyped, pinCode, params } = this.state
+    const { pinTyped, pinCode } = this.state
     if (pinTyped === 5) {
       this.setState({
         pinTyped: pinTyped + 1,
