@@ -69,6 +69,8 @@ export default class ScanQRCodeScreen extends Component {
     // this.props.navigation.state.params.returnData(data)
     // this.props.navigation.goBack()
     this.props.onCompleted(data)
+    const { qrCodeModal } = MainStore.sendTransaction.addressInputStore
+    qrCodeModal && qrCodeModal.close()
   }
 
   onError = (data) => {
@@ -80,6 +82,9 @@ export default class ScanQRCodeScreen extends Component {
     if (address) {
       // this.props.navigation.state.params.returnData(address)
       // this.props.navigation.goBack()
+      this.props.onCompleted(address)
+      const { qrCodeModal } = MainStore.sendTransaction.addressInputStore
+      qrCodeModal && qrCodeModal.close()
     } else {
       NavStore.popupCustom.show('No Address Copied')
     }
@@ -139,7 +144,7 @@ export default class ScanQRCodeScreen extends Component {
           this.setState({ showCamera: false })
           // this.props.navigation.goBack()
           const { qrCodeModal } = MainStore.sendTransaction.addressInputStore
-          qrCodeModal.qrCodeModal && qrCodeModal.qrCodeModal.close()
+          qrCodeModal && qrCodeModal.close()
         } else {
           NavStore.popupCustom.show('Can’t detect this code')
         }
@@ -176,10 +181,10 @@ export default class ScanQRCodeScreen extends Component {
       HapticHandler.NotificationSuccess()
       // this.props.navigation.goBack()
       // this.props.navigation.state.params.returnData(e.data.toLowerCase())
-      const { qrCodeModal } = MainStore.sendTransaction.addressInputStore
-      qrCodeModal.qrCodeModal && qrCodeModal.qrCodeModal.close()
       this.props.onCompleted(e.data.toLowerCase())
       this.setState({ showCamera: false })
+      const { qrCodeModal } = MainStore.sendTransaction.addressInputStore
+      qrCodeModal && qrCodeModal.close()
     }
   }
 

@@ -42,26 +42,16 @@ export default class ConfirmScreen extends Component {
       isShowAdvance: false,
       bottom: 0,
       marginVertical: new Animated.Value(20),
-      borderRadius: 5,
-      // gasLimit: '',
-      // gasGwei: '',
-      // gasLimitErr: null,
-      // gasGweiErr: null,
-      // isShowClearGasLimit: true,
-      // isShowClearGasPrice: true,
-      // isDisableDone: false
+      borderRadius: 5
     }
   }
 
   componentWillMount() {
-    // sendStore.getGasPrice()estimateGas
     MainStore.sendTransaction.confirmStore.estimateGas()
     MainStore.sendTransaction.confirmStore.validateAmount()
   }
 
   showAdvance = () => {
-    // const { gasLimit, gasPrice } = MainStore.sendTransaction.confirmStore.getTransaction
-    // this.setState({ isShowAdvance: true, gasLimit: `${gasLimit}`, gasGwei: `${gasPrice / 1000000000}`, gasGweiErr: '', gasLimitErr: '', isDisableDone: false }, () => {
     MainStore.sendTransaction.confirmStore._onShowAdvance()
     this.setState({ isShowAdvance: true }, () => {
       Animated.parallel([

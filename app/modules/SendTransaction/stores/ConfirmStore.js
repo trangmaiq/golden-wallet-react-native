@@ -74,7 +74,7 @@ export default class ConfirmStore {
     return `$${Helper.formatUSD(amountDolar)}`
   }
   _onShowAdvance() {
-    const formatedGasPrice = Starypto.Units.formatUnits(`${this.gasPrice}`, 9)
+    const formatedGasPrice = Number(Starypto.Units.formatUnits(`${this.gasPrice}`, 9)).toFixed(0)
 
     MainStore.sendTransaction.advanceStore.setGasLimit(this.gasLimit.toString(10))
     MainStore.sendTransaction.advanceStore.setGasPrice(formatedGasPrice)

@@ -1,4 +1,6 @@
 import { observable, action, computed } from 'mobx'
+import BigNumber from 'bignumber.js'
+import { NavigationActions } from 'react-navigation'
 import AmountStore from './AmountStore'
 import AddressInputStore from './AddressInputStore'
 import ConfirmStore from './ConfirmStore'
@@ -7,8 +9,10 @@ import Starypto from '../../../../Libs/react-native-starypto'
 import { toBigNumber, fromEther } from '../../../wallet/ethereum/txUtils'
 import MainStore from '../../../AppStores/MainStore'
 import constant from '../../../commons/constant'
+import NavStore from '../../../stores/NavStore'
 import SecureDS from '../../../AppStores/DataSource/SecureDS'
-import BigNumber from 'bignumber.js'
+import HapticHandler from '../../../Handler/HapticHandler'
+
 // import NavigationStore from '../../../navigation/NavigationStore'
 // import ScreenID from '../../../navigation/ScreenID'
 
@@ -53,7 +57,6 @@ class SendStore {
   }
 
   sendTx() {
-    console.log(this.confirmStore.value.toString(10))
     const transaction = {
       value: `${this.confirmStore.value.toString(10)}`,
       to: this.address,
@@ -73,12 +76,34 @@ class SendStore {
     //     }, 50)
     //   }
     // }, true)
-    const ds = new SecureDS('111111')
-    if (!this.isToken) {
-      this.sendETH(transaction, ds)
-    } else {
-      this.sendToken(transaction, ds)
-    }
+    NavStore.lockScreen({
+      onUnlock: (pincode) => {
+        NavStore.showLoading()
+        const ds = new SecureDS(pincode)
+        if (!this.isToken) {
+          return this.sendETH(transaction, ds)
+            .then(res => this._onSendSuccess(res))
+            .catch(err => this._onSendFail(err))
+        }
+        return this.sendToken(transaction, ds)
+          .then(res => this._onSendSuccess(res))
+          .catch(err => this._onSendFail(err))
+      }
+    }, true)
+  }
+
+  _onSendSuccess = (res) => {
+    NavStore.hideLoading()
+    HapticHandler.NotificationSuccess()
+    NavStore.navigator.dispatch(NavigationActions.back())
+    NavStore.navigator.dispatch(NavigationActions.back())
+    MainStore.clearSendStore()
+    NavStore.popupCustom.show('Send success')
+  }
+
+  _onSendFail = (err) => {
+    NavStore.hideLoading()
+    NavStore.popupCustom.show(err.message)
   }
 
   sendETH(transaction, ds) {
@@ -102,7 +127,7 @@ class SendStore {
             // )
             // return resolve(txTempt)
             this.generatePendingTransaction(tx, transaction, this.isToken)
-            return resolve()
+            return resolve(tx)
           })
           .catch((err) => {
             return reject(err)

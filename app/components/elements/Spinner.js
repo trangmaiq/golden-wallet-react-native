@@ -21,19 +21,17 @@ const styles = StyleSheet.create({
 
 export default class Spinner extends Component {
   static propTypes = {
-    style: PropTypes.array,
-    visible: PropTypes.bool
+    style: PropTypes.array
   }
 
   static defaultProps = {
-    style: [],
-    visible: true
+    style: []
   }
 
   constructor(props) {
     super(props)
     this.state = {
-      visible: props.visible
+      visible: false
     }
   }
 
@@ -55,10 +53,10 @@ export default class Spinner extends Component {
     } = this.props
     const { visible } = this.state
     if (!visible) {
-      return <View />
+      return <View key="invisible" />
     }
     return (
-      <View style={[styles.container, { backgroundColor: 'rgba(10,15,36,0.8)' }, style]}>
+      <View key="visible" style={[styles.container, { backgroundColor: 'rgba(10,15,36,0.8)' }, style]}>
         <GoldenLoading />
       </View>
     )

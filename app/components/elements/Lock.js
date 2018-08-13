@@ -83,7 +83,6 @@ export default class Lock extends Component {
           this._handleErrorPin()
         } else {
           this._handlePass()
-          params.onUnlock(this.state.pinCode)
         }
       })
     } else {
@@ -116,7 +115,7 @@ export default class Lock extends Component {
   _handlePass() {
     this._hide()
     HapticHandler.NotificationSuccess()
-    setTimeout(() => this.state.params.onUnlock && this.state.params.onUnlock(), 250)
+    setTimeout(() => this.state.params.onUnlock && this.state.params.onUnlock(this.state.pinCode), 250)
   }
 
   _handleErrorPin(e) {
@@ -161,10 +160,6 @@ export default class Lock extends Component {
 
   _hide() {
     StatusBar.setHidden(false, true)
-    this.setState({
-      pinTyped: 0,
-      pinCode: ''
-    })
     this._animatedOffset(0 - height - extraBottom)
   }
 

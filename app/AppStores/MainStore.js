@@ -35,6 +35,10 @@ class MainStore {
     this.sendTransaction = new SendStore()
   }
 
+  @action clearSendStore() {
+    this.sendTransaction = null
+  }
+
   gotoUnlock() {
     this.unlock = new UnlockStore()
     const unlockDes = this.appState.hasPassword ? 'Unlock with your PIN' : 'Create your PIN'

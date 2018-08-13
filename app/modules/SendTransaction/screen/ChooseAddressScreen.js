@@ -27,7 +27,7 @@ export default class ChooseAdressScreen extends PureComponent {
   }
   render() {
     const { onSelectedAddress } = this.props
-    const dataAddressBook = ContactStore.contacts.slice()
+    const dataAddressBook = MainStore.appState.addressBooks.slice()
     return (
       <View
         style={styles.container}
@@ -54,7 +54,7 @@ export default class ChooseAdressScreen extends PureComponent {
                 const { addressModal } = MainStore.sendTransaction.addressInputStore
                 addressModal && addressModal.close()
               }}
-              name={item.name}
+              name={item.title}
               address={item.address}
             />
           )}

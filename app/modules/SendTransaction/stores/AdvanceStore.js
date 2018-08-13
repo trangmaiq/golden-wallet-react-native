@@ -12,10 +12,12 @@ export default class AdvanceStore {
   @observable isDisableDone = false
 
   @action setGasLimit(gasLimit) {
-    this.gasLimit = gasLimit
+    // if (!gasLimit) return this.gasLimit = ''
+    this.gasLimit = gasLimit.replace(/\D/g, '')
   }
   @action setGasPrice(gasPrice) {
-    this.gasPrice = gasPrice
+    // if (!gasPrice) return this.gasPrice = '1'
+    this.gasPrice = gasPrice.replace(/\D/g, '')
   }
   @action setGasLimitErr(err) {
     this.gasLimitErr = err
@@ -31,7 +33,7 @@ export default class AdvanceStore {
   }
 
   @computed get rate() {
-    return 421
+    return MainStore.appState.rateETHDollar.toNumber()
   }
 
   @computed get title() {
