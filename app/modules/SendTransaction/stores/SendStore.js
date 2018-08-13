@@ -8,7 +8,7 @@ import { toBigNumber, fromEther } from '../../../wallet/ethereum/txUtils'
 import MainStore from '../../../AppStores/MainStore'
 import constant from '../../../commons/constant'
 import SecureDS from '../../../AppStores/DataSource/SecureDS'
-import BigNumber from '../../../../node_modules/bignumber.js'
+import BigNumber from 'bignumber.js'
 // import NavigationStore from '../../../navigation/NavigationStore'
 // import ScreenID from '../../../navigation/ScreenID'
 
@@ -140,6 +140,7 @@ class SendStore {
               gasLimit: transaction.gasLimit,
               gasPrice: transaction.gasPrice
             }
+
             wallet.sendTransaction(unspentTransaction).then((tx) => {
               this.generatePendingTransaction(tx, transaction, this.isToken)
               return resolve(tx)
@@ -186,8 +187,8 @@ class SendStore {
       gas: gasLimit,
       gasPrice
     }
-    console.log(pendingTransaction)
-    selectedToken.generateNewUnspendtx(pendingTransaction)
+
+    selectedToken.addUnspendTransaction(pendingTransaction)
   }
 }
 
