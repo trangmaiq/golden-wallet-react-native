@@ -178,7 +178,7 @@ export default class AdressInputScreen extends Component {
             >
               Scan QR Code
             </Text>
-            <Image source={images.icon_qrcode2} style={styles.buttonIcon} />
+            {/* <Image source={images.icon_qrcode2} style={styles.buttonIcon} /> */}
           </View>
         </TouchableOpacity>
         <View style={styles.line} />
@@ -197,7 +197,7 @@ export default class AdressInputScreen extends Component {
             >
               Address Book
             </Text>
-            <Image source={images.addressIcon} style={styles.buttonIcon} />
+            {/* <Image source={images.addressIcon} style={styles.buttonIcon} /> */}
           </View>
         </TouchableOpacity>
       </View>
