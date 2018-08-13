@@ -61,7 +61,9 @@
       2,
       "prefer-double"
     ],
-    "eqeqeq": 0
+    "eqeqeq": 0,
+    "no-return-await": 0,
+    "camelcase": 0
   },
   "env": {
     "react-native/react-native": true
