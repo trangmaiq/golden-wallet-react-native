@@ -143,7 +143,7 @@ class AppState {
   async startCheckBalanceJob() {
     this.checkBalanceJobID = setTimeout(() => {
       if (this.internetConnection === 'online') {
-        this.wallets.forEach(w => w.fetchingBalance(false, false))
+        this.wallets.forEach(w => w.fetchingBalance(false, true))
       }
 
       this.startCheckBalanceJob()
