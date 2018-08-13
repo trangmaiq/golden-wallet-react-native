@@ -67,7 +67,7 @@ export default class TransactionListScreen extends Component {
   render() {
     const transactions = this.selectedToken.allTransactions
     const { navigation } = this.props
-    const { isRefreshing } = this.selectedToken
+    const { isRefreshing, isLoading } = this.selectedToken
 
     return (
       <View style={styles.container}>
@@ -134,7 +134,7 @@ export default class TransactionListScreen extends Component {
             />
           </View>
         </Modal>
-        {transactions.length === 0 && <Spinner />}
+        {transactions.length === 0 && isLoading && <Spinner />}
       </View>
     )
   }

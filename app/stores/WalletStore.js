@@ -13,7 +13,7 @@ import api from '../api'
 import Authen from './../secure/Authen'
 import KeyStore from './../../Libs/react-native-golden-keystore'
 import NotificationStore from './NotificationStore'
-import sendTransactionStore from '../modules/SendTransaction/stores/SendTransactionStore'
+// import sendTransactionStore from '../modules/SendTransaction/stores/SendTransactionStore'
 
 class ObservableWalletStore {
   @observable userWallets = null

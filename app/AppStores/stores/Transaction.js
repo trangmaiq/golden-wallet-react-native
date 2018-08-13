@@ -2,6 +2,8 @@ import { BigNumber } from 'bignumber.js'
 import constant from '../../commons/constant'
 import Helper from '../../commons/Helper'
 import MainStore from '../MainStore'
+import api from '../../api'
+import UnpendTransactionDS from '../DataSource/UnspendTransactionDS'
 
 const defaultData = {
   blockNumber: '0',
@@ -27,7 +29,7 @@ const defaultData = {
 }
 
 export default class Transaction {
-  token = null
+  rate = new BigNumber(0)
 
   static generateUnspendTransaction(obj, token) {
     const transaction = { ...obj, status: 0 }
@@ -35,7 +37,7 @@ export default class Transaction {
   }
 
   constructor(obj, token) {
-    this.token = token
+    if (token) this.rate = token.rate
 
     const initObj = Object.assign({}, defaultData, obj)
 
@@ -45,6 +47,7 @@ export default class Transaction {
         case 'gas':
         case 'gasPrice':
         case 'gasUsed':
+        case 'rate':
           this[k] = new BigNumber(`${initObj[k]}`)
           break
         case 'tokenDecimal':
@@ -87,10 +90,58 @@ export default class Transaction {
   }
 
   get balanceUSD() {
-    return this.balance.multipliedBy(this.token.rate)
+    return this.balance.multipliedBy(this.rate)
   }
 
   get date() {
     return Helper.formatTransactionDate(this.timeStamp)
+  }
+
+  // Return true if it's status is success and removed from local storage
+  async removeWhenSuccess() {
+    try {
+      const apiResponse = await api.checkStatusTransaction(this.hash)
+      if (apiResponse.data.result.status === '1') {
+        await UnpendTransactionDS.deleteTransaction(this.hash)
+        return true
+      }
+      return false
+    } catch (_) {
+      // do nothing
+      return false
+    }
+  }
+
+  toJSON() {
+    const {
+      blockNumber, timeStamp, hash, nonce,
+      blockHash, from, contractAddress, to, value,
+      tokenName, tokenSymbol, tokenDecimal, transactionIndex, rate,
+      gas, gasPrice, gasUsed, cumulativeGasUsed, input, confirmations, status
+    } = this
+
+    return {
+      blockNumber,
+      timeStamp,
+      hash,
+      nonce,
+      blockHash,
+      from,
+      contractAddress,
+      to,
+      value: value.toString(10),
+      tokenName,
+      tokenSymbol,
+      tokenDecimal,
+      transactionIndex,
+      gas: gas.toString(10),
+      gasPrice: gasPrice.toString(10),
+      gasUsed: gasUsed.toString(10),
+      cumulativeGasUsed,
+      input,
+      confirmations,
+      status,
+      rate: rate.toString(10)
+    }
   }
 }
