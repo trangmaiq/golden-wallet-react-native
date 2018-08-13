@@ -54,13 +54,13 @@ class ObservableNavStore {
     this.sendModal && this.sendModal.close()
   }
 
-  @action lockScreen(params, showBiometry = true, shouldShowCancel = false) {
+  @action lockScreen(params, shouldShowCancel = false) {
     if (this.currentRouteName === 'UnlockScreen' ||
       (Platform.OS === 'android' && this.currentRouteName === 'ScanQRCodeScreen')) {
       return
     }
 
-    this.lock && this.lock._show(params, showBiometry, shouldShowCancel)
+    this.lock && this.lock._show(params, shouldShowCancel)
   }
 
   @action UnlockScreen() {
