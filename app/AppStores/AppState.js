@@ -116,11 +116,11 @@ class AppState {
       this.setSelectedWallet(this.wallets[0])
     }
     if (data.defaultWallet) {
-      this.defaultWallet = data.wallets.find(w => w.address === data.defaultWallet)
+      this.defaultWallet = wallets.find(w => w.address === data.defaultWallet)
     }
 
     if (data.selectedWallet) {
-      this.selectedWallet = data.wallets.find(w => w.address === data.selectedWallet)
+      this.selectedWallet = wallets.find(w => w.address === data.selectedWallet)
     }
 
     this.rateETHDollar = new BigNumber(data.rateETHDollar)
