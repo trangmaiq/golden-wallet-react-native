@@ -65,7 +65,7 @@
     "react-native-swipeable": "^0.6.0",
     "react-native-swiper": "^1.5.13",
     "react-native-touch-id": "^4.0.1",
-    "react-navigation": "^2.0.4",
+    "react-navigation": "^2.11.2",
     "readable-stream": "^1.0.33",
     "rn-nodeify": "^10.0.0",
     "stream-browserify": "^1.0.0",
