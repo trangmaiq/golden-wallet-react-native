@@ -1,12 +1,12 @@
 import { AsyncStorage } from 'react-native'
 import Transaction from '../stores/Transaction'
-import AppState from '../AppState'
+import mainStore from '../MainStore'
 
-const dataKey = `UNSPEND_TRANSACTIONS_${AppState.config.network}`
+const dataKey = () => `UNSPEND_TRANSACTIONS_${mainStore.appState.networkName}`
 
 class UnspendTransactionDS {
   async getTransactions() {
-    const unspendTransactions = await AsyncStorage.getItem(dataKey)
+    const unspendTransactions = await AsyncStorage.getItem(dataKey())
     if (!unspendTransactions) return []
 
     return JSON.parse(unspendTransactions).map(tx => new Transaction(tx))
@@ -21,7 +21,7 @@ class UnspendTransactionDS {
 
   saveTransactions(transactionArray) {
     const transactions = transactionArray.map(w => w.toJSON())
-    return AsyncStorage.setItem(dataKey, JSON.stringify(transactions))
+    return AsyncStorage.setItem(dataKey(), JSON.stringify(transactions))
   }
 
   async deleteTransaction(hash) {

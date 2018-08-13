@@ -103,6 +103,10 @@ class AppState {
     return wallet.canSendTransaction
   }
 
+  @computed get networkName() {
+    return this.config.network
+  }
+
   @action async import(orgData) {
     const data = orgData
     this.config = new Config(data.config.network, data.config.infuraKey)
