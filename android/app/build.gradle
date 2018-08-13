@@ -172,7 +172,6 @@ configurations.all {
 }
 
 dependencies {
-    compile project(':react-native-navigation')
     compile project(':react-native-shimmer')
     implementation 'com.android.support.constraint:constraint-layout:1.1.2'
     compile project(':react-native-touch-id')
