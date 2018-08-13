@@ -52,7 +52,11 @@ export default class WalletToken {
 
   @action async loadUnspendTransactions() {
     const transactions = await UnspendTransactionDS.getTransactions()
+    const walletAddress = appState.selectedWallet.address.toLowerCase()
     this.unspendTransactions = this.checkAndRemoveSuccessUnspendTransaction(transactions)
+      .filter((t) => {
+        return walletAddress === t.from.toLowerCase() || walletAddress === t.to.toLowerCase()
+      })
   }
 
   @computed get allTransactions() {
