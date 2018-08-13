@@ -28,7 +28,7 @@ import AddAddressBookScreen from './modules/AddressBook/screen/AddAddressBookScr
 import BackupFinishScreen from './modules/WalletBackup/screen/BackupFinishScreen'
 import ManageWalletScreen from './modules/Setting/screen/ManageWalletScreen'
 import TxHashWebViewScreen from './modules/TransactionDetail/screen/TxHashWebView'
-import NetworkScreen from './components/screens/NetworkScreen'
+import NetworkScreen from './modules/Setting/screen/NetworkScreen'
 import DWebBrowserScreen from './components/screens/DWebBrowserScreen'
 import AddressInputScreen from './modules/SendTransaction/screen/AddressInputScreen'
 

@@ -1,6 +1,4 @@
 import caller from './api-caller'
-import NetworkStore from '../stores/NetworkStore'
-import Network from '../Network'
 import appState from '../AppStores/AppState'
 import NetworkConfig from '../AppStores/stores/Config'
 
@@ -39,9 +37,8 @@ export const fetchTransactions = (addressStr, data, page = 1) => {
 export const checkStatusTransaction = (txHash) => {
   let url = 'https://api.etherscan.io/api'
   const apikey = 'SVUJNQSR2APDFX89JJ1VKQU4TKMB6W756M'
-  if (NetworkStore.currentNetwork !== Network.MainNet) {
-    url = `https://api-${NetworkStore.currentNetwork}.etherscan.io/api`
-    // apikey = 'YourApiKeyToken'
+  if (appState.config.network !== NetworkConfig.networks.mainnet) {
+    url = `https://api-${appState.config.network}.etherscan.io/api`
   }
   const params = {
     module: 'transaction',

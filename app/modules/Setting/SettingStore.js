@@ -43,20 +43,6 @@ export default class SettingStore {
     }
   ]
 
-  @observable dataAppSetting = [
-    {
-      mainText: 'Network',
-      onPress: () => { },
-      subText: 'Mainnet'
-    },
-    {
-      mainText: 'Enable Notification',
-      onPress: () => { },
-      type: 'switch',
-      enableSwitch: false
-    }
-  ]
-
   @observable dataAbout = [
     {
       mainText: `Rate Golden on ${store}`,
