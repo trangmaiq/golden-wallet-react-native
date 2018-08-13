@@ -25,6 +25,8 @@ import images from '../../../commons/images'
 import NavStore from '../../../stores/NavStore'
 import AppStyle from '../../../commons/AppStyle'
 import MainStore from '../../../AppStores/MainStore'
+import ActionButton from '../../../components/elements/ActionButton'
+import constant from '../../../commons/constant'
 
 const marginTop = LayoutUtils.getExtraTop()
 const { width } = Dimensions.get('window')
@@ -69,6 +71,10 @@ export default class ImportViaMnemonicScreen extends Component {
     if (content) {
       this.importMnemonicStore.setMnemonic(content)
     }
+  }
+
+  returnData(codeScanned) {
+    this.importMnemonicStore.setMnemonic(codeScanned)
   }
 
   _runExtraHeight(toValue) {
@@ -135,6 +141,17 @@ export default class ImportViaMnemonicScreen extends Component {
       })
   }
 
+  gotoScan = () => {
+    const { navigation } = this.props
+    setTimeout(() => {
+      navigation.navigate('ScanQRCodeScreen', {
+        title: 'Scan Private Key',
+        marginTop,
+        returnData: this.returnData.bind(this)
+      })
+    }, 300)
+  }
+
   render() {
     const { navigation } = this.props
     const { mnemonic, loading } = this.importMnemonicStore
@@ -176,6 +193,19 @@ export default class ImportViaMnemonicScreen extends Component {
                 {mnemonic === '' && this._renderPasteButton()}
                 {mnemonic !== '' && this._renderClearButton()}
               </View>
+              <View style={styles.actionButton}>
+                <ActionButton
+                  style={{ height: 40, paddingHorizontal: 17 }}
+                  buttonItem={{
+                    name: constant.SCAN_QR_CODE,
+                    icon: images.iconQrCode,
+                    background: '#121734'
+                  }}
+                  styleText={{ color: AppStyle.mainTextColor }}
+                  styleIcon={{ tintColor: AppStyle.mainTextColor }}
+                  action={this.gotoScan}
+                />
+              </View>
             </Animated.View>
             <BottomButton
               onPress={this._handleConfirm}
@@ -207,6 +237,12 @@ const styles = StyleSheet.create({
     paddingTop: 50,
     paddingBottom: 50,
     textAlignVertical: 'center'
+  },
+  actionButton: {
+    width,
+    alignItems: 'center',
+    marginTop: 20,
+    paddingHorizontal: 20
   },
   pasteText: {
     color: AppStyle.mainColor,
