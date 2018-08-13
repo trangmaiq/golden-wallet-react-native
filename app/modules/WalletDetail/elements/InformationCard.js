@@ -9,6 +9,7 @@ import { observer } from 'mobx-react/native'
 import PropTypes from 'prop-types'
 import images from '../../../commons/images'
 import FadeText from './FadeText'
+import NavStore from '../../../stores/NavStore'
 
 @observer
 export default class InformationCard extends Component {
@@ -44,8 +45,17 @@ export default class InformationCard extends Component {
     const { data } = this.props
     const { cardItem } = data
     const { isHideValue } = cardItem
-    cardItem.setHideValue(!isHideValue)
-    cardItem.update()
+    if (isHideValue) {
+      NavStore.lockScreen({
+        onUnlock: (_) => {
+          cardItem.setHideValue(!isHideValue)
+          cardItem.update()
+        }
+      }, true)
+    } else {
+      cardItem.setHideValue(!isHideValue)
+      cardItem.update()
+    }
   }
 
   render() {
