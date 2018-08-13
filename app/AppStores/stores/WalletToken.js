@@ -3,6 +3,7 @@ import { BigNumber } from 'bignumber.js'
 import appState from '../AppState'
 import API from '../../api'
 import Transaction from './Transaction'
+import UnspendTransactionDS from '../DataSource/UnspendTransactionDS'
 
 export default class WalletToken {
   @observable title = ''
@@ -36,9 +37,22 @@ export default class WalletToken {
 
   @action setBalance = (v) => { this.balance = v }
 
-  @action generateNewUnspendtx(obj) {
+  @action addUnspendTransaction(obj) {
     const unspendTx = Transaction.generateUnspendTransaction(obj, this)
     this.unspendTransactions = [unspendTx, ...this.unspendTransactions]
+    UnspendTransactionDS.addTransaction(unspendTx)
+  }
+
+  @action checkAndRemoveSuccessUnspendTransaction(transactions) {
+    return transactions.filter(async (t) => {
+      const didRemove = await !t.removeWhenSuccess()
+      return didRemove
+    })
+  }
+
+  @action async loadUnspendTransactions() {
+    const transactions = await UnspendTransactionDS.getTransactions()
+    this.unspendTransactions = this.checkAndRemoveSuccessUnspendTransaction(transactions)
   }
 
   @computed get allTransactions() {
@@ -81,6 +95,8 @@ export default class WalletToken {
     } else {
       this.txFetcherInfo.isLoading = true
     }
+
+    if (this.isRefreshing || this.txFetcherInfo.page === 1) this.loadUnspendTransactions()
 
     let data = {}
     // still for test

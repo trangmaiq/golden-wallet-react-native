@@ -72,7 +72,7 @@ export default class Lock extends Component {
 
   _handlePressPin(num) {
     HapticHandler.ImpactLight()
-    const { pinTyped, pinCode } = this.state
+    const { pinTyped, pinCode, params } = this.state
     if (pinTyped === 5) {
       this.setState({
         pinTyped: pinTyped + 1,
@@ -83,6 +83,7 @@ export default class Lock extends Component {
           this._handleErrorPin()
         } else {
           this._handlePass()
+          params.onUnlock(this.state.pinCode)
         }
       })
     } else {
@@ -147,7 +148,7 @@ export default class Lock extends Component {
     })
   }
 
-  _show(params, showBiometry, shouldShowCancel = false) {
+  _show(params, shouldShowCancel = false) {
     StatusBar.setHidden(true, true)
     this.setState({
       params: { ...params },
