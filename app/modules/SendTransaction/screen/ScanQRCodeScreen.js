@@ -70,7 +70,7 @@ export default class ScanQRCodeScreen extends Component {
     // this.props.navigation.goBack()
     this.props.onCompleted(data)
     const { qrCodeModal } = MainStore.sendTransaction.addressInputStore
-    qrCodeModal.qrCodeModal && qrCodeModal.qrCodeModal.close()
+    qrCodeModal && qrCodeModal.close()
   }
 
   onError = (data) => {
@@ -84,7 +84,7 @@ export default class ScanQRCodeScreen extends Component {
       // this.props.navigation.goBack()
       this.props.onCompleted(address)
       const { qrCodeModal } = MainStore.sendTransaction.addressInputStore
-      qrCodeModal.qrCodeModal && qrCodeModal.qrCodeModal.close()
+      qrCodeModal && qrCodeModal.close()
     } else {
       NavStore.popupCustom.show('No Address Copied')
     }
@@ -144,7 +144,7 @@ export default class ScanQRCodeScreen extends Component {
           this.setState({ showCamera: false })
           // this.props.navigation.goBack()
           const { qrCodeModal } = MainStore.sendTransaction.addressInputStore
-          qrCodeModal.qrCodeModal && qrCodeModal.qrCodeModal.close()
+          qrCodeModal && qrCodeModal.close()
         } else {
           NavStore.popupCustom.show('Can’t detect this code')
         }
@@ -184,7 +184,7 @@ export default class ScanQRCodeScreen extends Component {
       this.props.onCompleted(e.data.toLowerCase())
       this.setState({ showCamera: false })
       const { qrCodeModal } = MainStore.sendTransaction.addressInputStore
-      qrCodeModal.qrCodeModal && qrCodeModal.qrCodeModal.close()
+      qrCodeModal && qrCodeModal.close()
     }
   }
 
