@@ -153,8 +153,7 @@ export default class ImportViaPrivateKeyScreen extends Component {
 
   render() {
     const { navigation } = this.props
-    const { privateKey } = this.importPrivateKeyStore
-    const loading = false
+    const { privateKey, loading } = this.importPrivateKeyStore
     return (
       <SafeAreaView style={{ flex: 1 }}>
         <TouchableWithoutFeedback onPress={() => { Keyboard.dismiss() }}>

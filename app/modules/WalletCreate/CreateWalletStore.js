@@ -6,12 +6,14 @@ import NavStore from '../../stores/NavStore'
 class CreateWalletStore {
   @observable customTitle = `My wallet ${MainStore.appState.wallets.length}`
   @observable finished = false
+  @observable loading = false
 
   @action setTitle(title) {
     this.customTitle = title
   }
 
   @action handleCreateWallet() {
+    this.loading = true
     const ds = MainStore.secureStorage
     const index = MainStore.appState.currentWalletIndex
     const { title } = this
@@ -22,6 +24,7 @@ class CreateWalletStore {
       MainStore.appState.autoSetSelectedWallet()
       MainStore.appState.setCurrentWalletIndex(index + 1)
       MainStore.appState.save()
+      this.loading = false
       NavStore.reset()
     }, ds)
   }

@@ -4,6 +4,7 @@ import {
   StyleSheet
 } from 'react-native'
 import PropTypes from 'prop-types'
+/* eslint-disable-next-line */
 import GoldenLoading from './GoldenLoading'
 
 const styles = StyleSheet.create({
@@ -21,17 +22,19 @@ const styles = StyleSheet.create({
 
 export default class Spinner extends Component {
   static propTypes = {
-    style: PropTypes.array
+    style: PropTypes.array,
+    visible: PropTypes.bool
   }
 
   static defaultProps = {
-    style: []
+    style: [],
+    visible: true
   }
 
   constructor(props) {
     super(props)
     this.state = {
-      visible: false
+      visible: props.visible
     }
   }
 
