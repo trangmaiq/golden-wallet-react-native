@@ -143,9 +143,7 @@ export default class ImportViaAddressScreen extends Component {
   }
 
   render() {
-    const { address, title } = this.importAddressStore
-    // const loading = WalletStore.isLoadingImportAddress
-    const loading = false
+    const { address, title, loading } = this.importAddressStore
     return (
       <SafeAreaView style={{ flex: 1 }}>
         <TouchableWithoutFeedback onPress={() => { Keyboard.dismiss() }}>

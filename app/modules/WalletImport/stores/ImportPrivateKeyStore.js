@@ -6,6 +6,7 @@ import NavStore from '../../../stores/NavStore'
 export default class ImportPrivateKeyStore {
   @observable customTitle = `My wallet ${MainStore.appState.wallets.length}`
   @observable privKey = ''
+  @observable loading = false
 
   @action setTitle = (title) => { this.customTitle = title }
   @action setPrivateKey = (pk) => { this.privKey = pk }
@@ -15,11 +16,13 @@ export default class ImportPrivateKeyStore {
   }
 
   @action async create() {
+    this.loading = true
     const ds = MainStore.secureStorage
     const w = Wallet.importPrivateKey(this.privateKey, this.title, ds)
     await w.save()
     await MainStore.appState.syncWallets()
     MainStore.appState.autoSetSelectedWallet()
+    this.loading = false
     NavStore.reset()
   }
 

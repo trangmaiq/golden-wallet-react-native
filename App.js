@@ -97,6 +97,7 @@ export default class App extends Component {
           ref={(ref) => { this.blind = ref }}
         />
         <Spinner
+          visible={false}
           ref={(ref) => { NavStore.loading = ref }}
         />
         <Lock

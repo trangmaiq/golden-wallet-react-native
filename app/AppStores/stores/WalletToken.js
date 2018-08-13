@@ -55,7 +55,8 @@ export default class WalletToken {
     const walletAddress = appState.selectedWallet.address.toLowerCase()
     this.unspendTransactions = this.checkAndRemoveSuccessUnspendTransaction(transactions)
       .filter((t) => {
-        return walletAddress === t.from.toLowerCase() || walletAddress === t.to.toLowerCase()
+        return (walletAddress === t.from.toLowerCase() || walletAddress === t.to.toLowerCase()) &&
+          this.symbol === t.tokenSymbol
       })
   }
 
@@ -103,10 +104,8 @@ export default class WalletToken {
     if (this.isRefreshing || this.txFetcherInfo.page === 1) this.loadUnspendTransactions()
 
     let data = {}
-    // still for test
-    const address = appState.selectedWallet
-      ? appState.selectedWallet.address
-      : '0xd551234ae421e3bcba99a0da6d736074f22192ff'
+
+    const { address } = appState.selectedWallet
 
     if (address === this.address) {
       data = {
