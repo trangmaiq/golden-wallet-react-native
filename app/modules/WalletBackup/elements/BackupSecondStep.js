@@ -55,7 +55,7 @@ export default class BackupSecondStep extends Component {
         </Text>
         <TagList
           isShowOrder
-          arrayMnemonic={MainStore.backupStore.listMnemonic}
+          arrayMnemonic={MainStore.backupStore.listMnemonic.slice()}
           style={{
             paddingVerticalOfItem: isSmallScreen ? 12 : 20,
             numberOfWordInRow: 3,

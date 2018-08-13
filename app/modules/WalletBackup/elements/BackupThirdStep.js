@@ -61,7 +61,7 @@ export default class BackupThirdStep extends Component {
             <TagList
               isCenter
               isShowOrder
-              arrayMnemonic={listKeyWordChoose}
+              arrayMnemonic={listKeyWordChoose.slice()}
               onItemPress={this.onRemoveWord}
               style={{
                 paddingVerticalOfItem: 12,
@@ -78,10 +78,10 @@ export default class BackupThirdStep extends Component {
               }}
             />
             <TagList
-              arrayMnemonic={listKeywordRandom}
+              arrayMnemonic={listKeywordRandom.slice()}
               onItemPress={this.onAddWord}
               isCenter
-              buttonStates={buttonStates}
+              buttonStates={buttonStates.slice()}
               style={{
                 paddingVerticalOfItem: 10,
                 numberOfWordInRow: 3,
