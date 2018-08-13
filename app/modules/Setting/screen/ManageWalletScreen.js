@@ -82,6 +82,11 @@ export default class ListWalletScreen extends Component {
         {
           text: 'Remove',
           onClick: async () => {
+            const { wallets, selectedWallet } = MainStore.appState
+            const index = wallets.indexOf(selectedWallet)
+            if (index === wallets.length - 1) {
+              MainStore.appState.setSelectedWallet(null)
+            }
             await this.selectedWallet.remove()
             MainStore.appState.syncWallets()
             NavStore.popupCustom.hide()
