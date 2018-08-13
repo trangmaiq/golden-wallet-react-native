@@ -33,14 +33,15 @@ export default class Transaction {
 
   static generateUnspendTransaction(obj, token) {
     const transaction = { ...obj, status: 0 }
-    return new Transaction(transaction, token)
+    return new Transaction(transaction, token, 0)
   }
 
-  constructor(obj, token) {
+  constructor(obj, token, status = 1) {
     if (token) this.rate = token.rate
 
     const initObj = Object.assign({}, defaultData, obj)
 
+    this.status = status
     Object.keys(initObj).forEach((k) => {
       switch (k) {
         case 'value':
@@ -82,7 +83,10 @@ export default class Transaction {
   }
 
   get fee() {
-    return this.gasUsed.multipliedBy(this.gasPrice).dividedBy(new BigNumber(`1.0e+18`))
+    if (this.status === 1) {
+      return this.gasUsed.multipliedBy(this.gasPrice).dividedBy(new BigNumber(`1.0e+18`))
+    }
+    return this.gas.multipliedBy(this.gasPrice).dividedBy(new BigNumber(`1.0e+18`))
   }
 
   get balance() {
