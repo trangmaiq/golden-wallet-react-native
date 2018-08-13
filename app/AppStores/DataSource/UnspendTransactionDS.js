@@ -1,7 +1,8 @@
 import { AsyncStorage } from 'react-native'
 import Transaction from '../stores/Transaction'
+import AppState from '../AppState'
 
-const dataKey = 'UNSPEND_TRANSACTIONS'
+const dataKey = `UNSPEND_TRANSACTIONS_${AppState.config.network}`
 
 class UnspendTransactionDS {
   async getTransactions() {
