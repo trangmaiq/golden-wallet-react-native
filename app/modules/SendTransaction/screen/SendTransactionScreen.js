@@ -90,6 +90,11 @@ export default class SendTransactionScreen extends Component {
     this.amountStore.max()
   }
 
+  _onCancelTrasaction = () => {
+    this.props.navigation.dispatch(NavigationActions.back())
+    MainStore.clearSendStore()
+  }
+
   _onSendPress = () => {
     this.props.navigation.navigate('AddressInputScreen')
     this.amountStore.send()
@@ -139,10 +144,7 @@ export default class SendTransactionScreen extends Component {
       >
         <TouchableOpacity
           style={styles.exit}
-          onPress={() => {
-            this.props.navigation.dispatch(NavigationActions.back())
-            MainStore.clearSendStore()
-          }}
+          onPress={this._onCancelTrasaction}
         >
           <Image style={styles.exitBtn} source={images.closeButton} resizeMode="contain" />
         </TouchableOpacity>
