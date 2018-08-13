@@ -10,12 +10,10 @@ import {
   Keyboard,
   Animated
 } from 'react-native'
+// import PropTypes from 'prop-types'
 import AppStyle from '../../commons/AppStyle'
 
 export default class PopupCustom extends Component {
-  static navigatorStyle = {
-    navBarHidden: true
-  }
   state = {
     visible: false,
     title: 'Alert',
@@ -43,16 +41,24 @@ export default class PopupCustom extends Component {
     this.keyboardDidHideListener = Keyboard.addListener(hide, e => this._keyboardDidHide(e))
   }
 
+  componentDidMount() {
+
+  }
+
   componentWillUnmount() {
     this.keyboardDidShowListener.remove()
     this.keyboardDidHideListener.remove()
   }
 
   _runKeyboardAnim(toValue) {
+    // if (!isNaN(this.state.bottom)) return
+
+    // this.setState({bottom: toValue})
     Animated.timing(
-      this.state.offsetY,
+      // Animate value over time
+      this.state.offsetY, // The value to drive
       {
-        toValue: -toValue,
+        toValue: -toValue, // Animate to final value of 1
         duration: 250,
         useNativeDriver: true
       }
@@ -106,7 +112,7 @@ export default class PopupCustom extends Component {
           key={index}
           style={{
             flexDirection: 'row',
-            alignItems: AppStyle.center,
+            alignItems: 'center',
             flex: 1
           }}
         >
@@ -115,7 +121,7 @@ export default class PopupCustom extends Component {
             style={[styles.buttonView]}
             onPress={() => { btn.onClick(valueInput) }}
           >
-            <View style={{ flex: 1, alignItems: AppStyle.center, justifyContent: AppStyle.center }}>
+            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
               <Text style={styles.textButton}>{btn.text}</Text>
             </View>
           </TouchableOpacity>
@@ -216,35 +222,35 @@ const styles = StyleSheet.create({
   },
   overlayPopup: {
     flex: 1,
-    alignItems: AppStyle.center,
-    justifyContent: AppStyle.center,
+    alignItems: 'center',
+    justifyContent: 'center',
     backgroundColor: 'rgba(0,0,0,0.75)'
   },
   titlePopup: {
     fontSize: 17,
-    fontFamily: AppStyle.mainFontSemiBold,
-    textAlign: AppStyle.center
+    fontFamily: 'OpenSans-Semibold',
+    textAlign: 'center'
   },
   buttonField: {
     borderTopWidth: 0.5,
     borderColor: '#14192D',
     flexDirection: 'row',
-    alignItems: AppStyle.center,
+    alignItems: 'center',
     height: 43
   },
   buttonView: {
-    alignItems: AppStyle.center,
-    justifyContent: AppStyle.center,
+    alignItems: 'center',
+    justifyContent: 'center',
     flex: 1
   },
   textButton: {
     fontSize: 18,
-    fontFamily: AppStyle.mainFontSemiBold,
+    fontFamily: 'OpenSans-Semibold',
     color: AppStyle.mainColor
   },
   contentField: {
-    alignItems: AppStyle.center,
-    justifyContent: AppStyle.center,
+    alignItems: 'center',
+    justifyContent: 'center',
     paddingHorizontal: 17
   },
   line: {
@@ -254,9 +260,9 @@ const styles = StyleSheet.create({
   },
   contentPopup: {
     fontSize: 14,
-    fontFamily: AppStyle.mainFont,
+    fontFamily: Platform.OS === 'ios' ? 'OpenSans' : 'OpenSans-Regular',
     color: AppStyle.mainTextColor,
-    textAlign: AppStyle.center
+    textAlign: 'center'
   },
   textInput: {
     width: 236,
@@ -265,7 +271,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     color: AppStyle.mainTextColor,
     fontSize: 14,
-    fontFamily: AppStyle.mainFontSemiBold,
+    fontFamily: 'OpenSans-Semibold',
     backgroundColor: '#121734'
   }
 })

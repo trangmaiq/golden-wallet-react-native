@@ -20,13 +20,11 @@ const extraBottom = LayoutUtils.getExtraBottom()
 export default class BottomButton extends Component {
   static propTypes = {
     onPress: PropTypes.func.isRequired,
-    text: PropTypes.string,
-    enable: PropTypes.bool
+    text: PropTypes.string
   }
 
   static defaultProps = {
-    text: constant.DONE,
-    enable: true
+    text: constant.DONE
   }
 
   state = {
@@ -35,11 +33,15 @@ export default class BottomButton extends Component {
     borderRadius: new Animated.Value(5)
   }
 
-  componentDidMount() {
+  componentWillMount() {
     const show = Platform.OS === 'ios' ? 'keyboardWillShow' : 'keyboardDidShow'
     const hide = Platform.OS === 'ios' ? 'keyboardWillHide' : 'keyboardDidHide'
     this.keyboardDidShowListener = Keyboard.addListener(show, e => this._keyboardDidShow(e))
     this.keyboardDidHideListener = Keyboard.addListener(hide, e => this._keyboardDidHide(e))
+  }
+
+  componentDidMount() {
+
   }
 
   componentWillUnmount() {
@@ -76,8 +78,8 @@ export default class BottomButton extends Component {
   _keyboardDidShow(e) {
     let value = e.endCoordinates.height + extraBottom
 
-    if (Platform.OS == 'android') {
-      value = 0
+    if (isIPX) {
+      value -= 34
     }
     this._runKeyboardAnim(value)
   }
@@ -87,7 +89,7 @@ export default class BottomButton extends Component {
   }
 
   render() {
-    const { onPress, text, enable } = this.props
+    const { onPress, text } = this.props
     return (
       <Animated.View style={{
         position: 'absolute',
@@ -100,14 +102,13 @@ export default class BottomButton extends Component {
       }}
       >
         <TouchableOpacity
-          disabled={!enable}
           onPress={() => {
             Keyboard.dismiss()
             onPress()
           }}
           style={styles.saveButton}
         >
-          <Text style={{ fontSize: 16, color: enable ? AppStyle.mainColor : AppStyle.Color.silverColor, fontFamily: AppStyle.mainFontSemiBold }}>
+          <Text style={{ fontSize: 16, color: AppStyle.mainColor, fontFamily: 'OpenSans-Semibold' }}>
             {text}
           </Text>
         </TouchableOpacity>

@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { View, Platform } from 'react-native'
 import { getStatusBarHeight } from 'react-native-status-bar-height'
-import Hamburger from '../elements/HamburgerButton'
+import Hamburger from './../elements/HamburgerButton'
 
 const marginTop = Platform.OS === 'ios' ? getStatusBarHeight() : 0
 

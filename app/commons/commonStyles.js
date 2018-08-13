@@ -3,7 +3,7 @@ import {
   Dimensions,
   Platform
 } from 'react-native'
-import AppStyle from './AppStyle'
+import AppStyle from '../commons/AppStyle'
 
 const { width } = Dimensions.get('window')
 

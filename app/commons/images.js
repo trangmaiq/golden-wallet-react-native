@@ -68,8 +68,6 @@ export default {
   shimmerToken: require('./../assets/images/shimmer_token.png'),
   iconSync: require('./../assets/images/icon_sync.png'),
   imgScanFrame: require('./../assets/images/img_scan_frame.png'),
-  iconAddPhoto: require('./../assets/images/icon_add_photo.png'),
-  iconSendNew: require('./../assets/images/icon_send_new.png'),
-  iconScanQRCodeNew: require('./../assets/images/icon_scan_qr_new.png')
+  iconAddPhoto: require('./../assets/images/icon_add_photo.png')
 
 }

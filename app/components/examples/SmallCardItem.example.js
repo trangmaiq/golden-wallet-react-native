@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import { ScrollView, Dimensions } from 'react-native'
-import SmallCardItem from '../elements/SmallCardItem'
-import images from '../../commons/images'
-import Apstyle from '../../commons/AppStyle'
+import SmallCardItem from './../elements/SmallCardItem'
+import images from './../../commons/images'
+import Apstyle from './../../commons/AppStyle'
 
 const { width } = Dimensions.get('window')
 

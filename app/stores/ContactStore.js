@@ -1,6 +1,6 @@
 import { observable, action } from 'mobx'
 import { AsyncStorage } from 'react-native'
-import NavigationStore from '../navigation/NavigationStore'
+import NavStore from './NavStore'
 
 class ContactStore {
   constructor() {
@@ -40,7 +40,7 @@ class ContactStore {
       try {
         AsyncStorage.setItem('CONTACTS_LIST', JSON.stringify(this.contacts))
       } catch (error) {
-        NavigationStore.showPopup('Cannot delete this contact')
+        NavStore.popupCustom.show('Cannot delete this contact')
       }
     }
   }

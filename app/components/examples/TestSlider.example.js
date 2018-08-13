@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import SliderItem from '../elements/SliderItem'
+import SliderItem from './../../components/elements/SliderItem'
 
 export default class TestSlider extends Component {
   render() {

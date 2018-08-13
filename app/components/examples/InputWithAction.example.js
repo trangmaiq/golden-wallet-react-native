@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { ScrollView } from 'react-native'
-import InputWithAction from '../elements/InputWithActionItem'
+import InputWithAction from './../elements/InputWithActionItem'
 
 export default class InputWithACtionExam extends Component {
   render() {

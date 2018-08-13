@@ -1,6 +1,8 @@
 import caller from './api-caller'
 import NetworkStore from '../stores/NetworkStore'
 import Network from '../Network'
+import appState from '../AppStores/AppState'
+import NetworkConfig from '../AppStores/stores/Config'
 
 /**
  *
@@ -17,22 +19,15 @@ export const fetchWalletInfo = (address) => {
  * @param {String} addressStr
  * @param {Object} data
  */
-export const fetchTransactions = (addressStr, data = {
-  module: 'account',
-  action: 'txlist',
-  address: addressStr,
-  startblock: 0,
-  sort: 'desc',
-  endblock: 99999999,
-  offset: 8,
-  apikey: 'SVUJNQSR2APDFX89JJ1VKQU4TKMB6W756M'
-}, page = 1) => {
+export const fetchTransactions = (addressStr, data, page = 1) => {
   let url = `https://api.etherscan.io/api`
   const params = data
   params.page = page
-  if (NetworkStore.currentNetwork !== Network.MainNet) {
-    url = `https://api-${NetworkStore.currentNetwork}.etherscan.io/api`
+
+  if (appState.config.network !== NetworkConfig.networks.mainnet) {
+    url = `https://api-${appState.config.network}.etherscan.io/api`
   }
+
   if (!addressStr) return Promise.reject()
   return caller.get(url, params, true)
 }

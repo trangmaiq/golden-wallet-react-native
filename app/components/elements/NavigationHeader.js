@@ -4,12 +4,10 @@ import {
   Image,
   Text,
   StyleSheet,
-  Platform,
-  TouchableWithoutFeedback
+  TouchableOpacity
 } from 'react-native'
 import PropTypes from 'prop-types'
-import debounce from 'lodash.debounce'
-import images from '../../commons/images'
+import images from './../../commons/images'
 import AppStyle from '../../commons/AppStyle'
 
 export default class NavigationHeader extends Component {
@@ -33,8 +31,6 @@ export default class NavigationHeader extends Component {
     action: () => { }
   }
 
-  canPressAction = true
-
   render() {
     const {
       style,
@@ -49,11 +45,9 @@ export default class NavigationHeader extends Component {
       button
     } = headerItem
     return (
-      <TouchableWithoutFeedback
+      <TouchableOpacity
         style={containerStyle}
-        onPress={Platform.OS === 'ios' ? () => { action() } : debounce(() => {
-          action()
-        }, 200)}
+        onPress={() => { action() }}
       >
         <View style={[styles.container, style]}>
           <Image
@@ -77,7 +71,7 @@ export default class NavigationHeader extends Component {
             </Text>
           }
         </View>
-      </TouchableWithoutFeedback>
+      </TouchableOpacity>
     )
   }
 }
@@ -92,6 +86,6 @@ const styles = StyleSheet.create({
   titleStyle: {
     fontSize: 20,
     color: AppStyle.mainTextColor,
-    fontFamily: AppStyle.mainFontBold
+    fontFamily: 'OpenSans-Bold'
   }
 })

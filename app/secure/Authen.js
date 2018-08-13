@@ -1,11 +1,10 @@
 import * as Keychain from 'react-native-keychain'
 import { randomBytes } from 'react-native-randombytes'
 import localStorage from './LocalStorage'
-import KeyLocal from '../commons/SAVED_ID_LOCAL'
-import Starypto from '../../Libs/react-native-starypto'
+import KeyLocal from './../commons/SAVED_ID_LOCAL'
+import Starypto from './../../Libs/react-native-starypto'
 import WalletStore from '../stores/WalletStore'
-// import NavStore from '../stores/NavStore'
-import NavigationStore from '../navigation/NavigationStore'
+import NavStore from '../stores/NavStore'
 
 class Authen {
   randomKey = ''
@@ -22,7 +21,7 @@ class Authen {
     if (havePin) {
       if (havePin.length > 4) {
         // localStorage.saveItem(KeyLocal.PIN_CODE, 'true')
-        NavigationStore.showPopup('Golden Wallet need to setup a new Pin Code.')
+        NavStore.popupCustom.show('Golden Wallet need to setup a new Pin Code.')
         return false
       }
       return true

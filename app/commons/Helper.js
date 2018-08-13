@@ -1,6 +1,5 @@
 import numeral from 'numeral'
 import moment from 'moment'
-import sendTransactionStore from '../modules/SendTransaction/stores/SendTransactionStore';
 
 const trillion = 1000000000000
 const billion = 1000000000
@@ -52,7 +51,7 @@ export default class Helper {
       sameElse: 'MMMM DD, YYYY'
     })
   }
-  static formatETH(value) {
+  static formatETH(value, isAmountScreen = false) {
     if (value) {
       const dataSplit = value.toString().split('.')
       const integer = dataSplit[0]
@@ -60,7 +59,7 @@ export default class Helper {
       if (integer > million) {
         return this.formatBigValue(integer)
       }
-      if (integer >= 1000) {
+      if (integer >= 1000 && !isAmountScreen) {
         return `${this.numberWithCommas(integer)}`
       }
       if (decimal.length > 4) {
@@ -72,15 +71,15 @@ export default class Helper {
     return 0
   }
 
-  static formatUSD(value) {
+  static formatUSD(value, isAmountScreen = false, option = million) {
     if (value) {
       const dataSplit = value.toString().split('.')
       const integer = dataSplit[0]
       let decimal = dataSplit[1] ? dataSplit[1] : 0
-      if (integer > million) {
+      if (integer > option) {
         return this.formatBigValue(integer)
       }
-      if (integer >= 10000) {
+      if (integer >= 10000 && !isAmountScreen) {
         return `${this.numberWithCommas(integer)}`
       }
       if (decimal.length > 2) {
@@ -114,41 +113,5 @@ export default class Helper {
     const subRange = range / 100
     const result = temp / subRange
     return `${Math.floor(result)}`
-  }
-
-  static formatDecimalWithFourDigits(value, type) {
-    console.log(value)
-    const dataSplit = value.toString().split('.')
-    const integer = dataSplit[0]
-    let decimal = dataSplit[1] ? dataSplit[1] : ''
-    if (decimal.split('').length == 0) {
-      const data = this.numberWithCommas(integer).split('').map((item) => { return { text: item } })
-      sendTransactionStore.setNumberArray({ data, subData: [], isHadPoint: false })
-    } else if (decimal.split('').length == 1) {
-      const string = `${this.numberWithCommas(integer)}.${decimal}`
-      const data = string.split('').map((item) => { return { text: item } })
-      const subData = type ? [{ text: '0' }] : [{ text: '0' }, { text: '' }, { text: '' }]
-      sendTransactionStore.setNumberArray({ data, subData, isHadPoint: true })
-    } else if (decimal.split('').length == 2) {
-      const string = `${this.numberWithCommas(integer)}.${decimal}`
-      const data = string.split('').map((item) => { return { text: item } })
-      const subData = type ? [] : [{ text: '0' }, { text: '' }]
-      sendTransactionStore.setNumberArray({ data, subData, isHadPoint: true })
-    } else if (decimal.split('').length == 3) {
-      const string = `${this.numberWithCommas(integer)}.${decimal}`
-      const data = string.split('').map((item) => { return { text: item } })
-      const subData = [{ text: '0' }]
-      sendTransactionStore.setNumberArray({ data, subData, isHadPoint: true })
-    } else if (decimal.split('').length == 4) {
-      const string = `${this.numberWithCommas(integer)}.${decimal}`
-      const data = string.split('').map((item) => { return { text: item } })
-      sendTransactionStore.setNumberArray({ data, subData: [], isHadPoint: true })
-    }
-    // const count = rule - decimal.length
-    // for (let i = 0; i < count; i++) {
-    //   decimal = `${decimal}0`
-    // }
-    // const result = `${this.numberWithCommas(integer)}.${decimal}`
-    // return result
   }
 }

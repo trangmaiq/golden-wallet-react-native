@@ -5,26 +5,31 @@ import {
   Image,
   Text,
   StyleSheet,
-  View
+  View,
+  SafeAreaView
 } from 'react-native'
+import PropsType from 'prop-types'
 import { observer } from 'mobx-react/native'
-import NavigationHeader from '../elements/NavigationHeader'
-import Images from '../../commons/images'
-import AppStyle from '../../commons/AppStyle'
+import { NavigationActions } from 'react-navigation'
+import NavigationHeader from './../elements/NavigationHeader'
+import Images from './../../commons/images'
+import AppStyle from './../../commons/AppStyle'
 import WalletStore from '../../stores/WalletStore'
 import NetworkStore from '../../stores/NetworkStore'
 import StringHandler from '../../Handler/StringHandler'
 import Spinner from '../elements/Spinner'
 import LayoutUtils from '../../commons/LayoutUtils'
 
-import NavigationStore from '../../navigation/NavigationStore'
-
 const marginTop = LayoutUtils.getExtraTop()
 
 @observer
 export default class NetworkScreen extends Component {
-  static navigatorStyle = {
-    navBarHidden: true
+  static propTypes = {
+    navigation: PropsType.object
+  }
+
+  static defaultProps = {
+    navigation: null
   }
 
   _renderNetworkItem = ({ item, index }) => {
@@ -32,6 +37,9 @@ export default class NetworkScreen extends Component {
       name,
       isChoose
     } = item
+    const {
+      navigation
+    } = this.props
     const networkName = StringHandler.toCapitalize(name)
     const borderTopWidth = index === 0 ? 0 : 1
     return (
@@ -40,7 +48,7 @@ export default class NetworkScreen extends Component {
         NetworkStore.setSwitchingNetwork(true)
         WalletStore.fetchBalanceAllWallet(null, () => {
           NetworkStore.setSwitchingNetwork(false)
-          NavigationStore.popView()
+          navigation.goBack()
         })
       }}
       >
@@ -84,9 +92,10 @@ export default class NetworkScreen extends Component {
   }
 
   render() {
+    const { navigation } = this.props
     const loading = NetworkStore.switchingNetwork
     return (
-      <View style={styles.container}>
+      <SafeAreaView style={styles.container}>
         <NavigationHeader
           style={{ marginTop: 20 + marginTop }}
           headerItem={{
@@ -95,7 +104,7 @@ export default class NetworkScreen extends Component {
             button: Images.backButton
           }}
           action={() => {
-            NavigationStore.popToRootView()
+            navigation.dispatch(NavigationActions.back())
           }}
         />
         {this._renderIntroduction()}
@@ -103,7 +112,7 @@ export default class NetworkScreen extends Component {
         {loading &&
           <Spinner />
         }
-      </View >
+      </SafeAreaView >
     )
   }
 }

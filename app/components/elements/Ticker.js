@@ -11,7 +11,7 @@ import {
   Platform
 } from 'react-native'
 import PropTypes from 'prop-types'
-import AppStyle from '../../commons/AppStyle'
+import AppStyle from './../../commons/AppStyle'
 import Helper from '../../commons/Helper'
 
 const marginLeftOfItem = 2

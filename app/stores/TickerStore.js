@@ -21,7 +21,7 @@ class TickerStore {
     axios.get('https://api.coinmarketcap.com/v2/ticker/?limit=10')
       .then((res) => {
         this.parseData(res.data.data)
-      }).catch(e => () => { })
+      })
   }
 }
 

@@ -1,5 +1,3 @@
-import WalletStore from '../stores/WalletStore'
-
 class Checker {
   static checkAddress(address) {
     const regx = /0x[0-9A-Fa-f]{40}/
@@ -16,23 +14,10 @@ class Checker {
   }
   static checkNameIsExist(wallets, name) {
     const isExist = wallets.find((w) => {
-      return w.cardName.toLowerCase() === name.toLowerCase()
+      return w.title.toLowerCase() === name.toLowerCase()
     })
     return isExist
   }
-
-  static checkExistName(name, index) {
-    const wallets = WalletStore.dataCards
-    for (let i = 0; i < wallets.length; i++) {
-      if (i !== index) {
-        if (wallets[i].cardName === name) {
-          return true
-        }
-      }
-    }
-    return false
-  }
-
   static async checkInternet() {
     let probablyHasInternet = false
     try {

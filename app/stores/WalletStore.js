@@ -1,6 +1,7 @@
 import { observable, action, computed } from 'mobx'
 import { AsyncStorage } from 'react-native'
-import Starypto from '../../Libs/react-native-starypto'
+import Starypto from './../../Libs/react-native-starypto'
+import NavStore from './NavStore'
 import NetworkStore from './NetworkStore'
 import NotificationAPI from '../api/NotificationAPI'
 import WalletParser from '../Handler/WalletParser'
@@ -9,10 +10,9 @@ import Network from '../Network'
 import CurrencyStore from './CurrencyStore'
 import Helper from '../commons/Helper'
 import api from '../api'
-import Authen from '../secure/Authen'
-import KeyStore from '../../Libs/react-native-golden-keystore'
+import Authen from './../secure/Authen'
+import KeyStore from './../../Libs/react-native-golden-keystore'
 import NotificationStore from './NotificationStore'
-import NavigationStore from '../navigation/NavigationStore'
 import sendTransactionStore from '../modules/SendTransaction/stores/SendTransactionStore'
 
 class ObservableWalletStore {
@@ -28,7 +28,6 @@ class ObservableWalletStore {
   @observable.ref childNode = null
   @observable.ref walletCached = {}
   @observable isFetchingBalance = false
-  @observable enableSecretBalance = true
 
   @computed get dataCards() {
     if (!this.userWallets) {
@@ -200,6 +199,7 @@ class ObservableWalletStore {
           balanceETH: wallet.balanceETH
         }
       }
+
       const wallets = userWallets.ethWallets || []
       const index = userWallets.ethIndex || 0
       wallets[i] = walletEdited
@@ -217,17 +217,11 @@ class ObservableWalletStore {
 
   @action onRemoveWallet(i) {
     this.removeWallet(i)
-    const listWallet = this.userWallets.ethWallets.slice()
-    const { length } = listWallet
-    console.log('i', i)
-    console.log('length', length)
-    console.log('selectedIndex', this.selectedIndex)
-    if (length <= this.selectedIndex) {
+    if (i === this.userWallets.ethWallets.slice().length &&
+      i === this.selectedIndex
+    ) {
       this.setSelectedIndex(null)
     }
-    // else if (i === this.selectedIndex) {
-    //   this.selectedIndex -= 1
-    // }
   }
 
   removeWallet(i) {
@@ -348,7 +342,6 @@ class ObservableWalletStore {
           if (!sendTransactionStore.isSendToken && w.address === this.selectedWallet.address) {
             const wl = {
               postfix: 'ETH',
-              address: this.selectedWallet.address,
               balanceCrypto: balanceData.balanceETH,
               balanceUSD: balanceData.balanceETH * CurrencyStore.currencyUSD,
               ratio: CurrencyStore.currencyUSD
@@ -376,7 +369,6 @@ class ObservableWalletStore {
           if (!sendTransactionStore.isSendToken && w.address === this.selectedWallet.address) {
             const wl = {
               postfix: 'ETH',
-              address: this.selectedWallet.address,
               balanceCrypto: balanceData.balanceETH,
               balanceUSD: balanceData.balanceETH * CurrencyStore.currencyUSD,
               ratio: CurrencyStore.currencyUSD
@@ -420,10 +412,10 @@ class ObservableWalletStore {
     return api.fetchWalletInfo(address).then((res) => {
       if (res.data.error) {
         if (res.data.error.code === 999) {
-          NavigationStore.showPopup('Server is going down to maintain, please try later!')
+          NavStore.popupCustom.show('Server is going down to maintain, please try later!')
           return null
         }
-        NavigationStore.showPopup(res.data.error.message)
+        NavStore.popupCustom.show(res.data.error.message)
         return null
       }
       return res.data
@@ -469,7 +461,7 @@ class ObservableWalletStore {
       const walletFormat = WalletParser.parseToPlainWallet(wallet, walletIndex, 'Private Key')
       const isExist = Checker.checkWalletIsExist(wallets, walletFormat.address)
       if (isExist) {
-        NavigationStore.showPopup('Wallet is exist')
+        NavStore.popupCustom.show('wallet is exist')
         this.isLoadingImportPrivateKey = false
         return
       }
@@ -484,7 +476,7 @@ class ObservableWalletStore {
       this.setUserWallets(data)
       this.isLoadingImportPrivateKey = false
     } catch (e) {
-      NavigationStore.showPopup(e)
+      NavStore.popupCustom.show(e)
       this.isLoadingImportPrivateKey = false
     }
   }
@@ -535,6 +527,7 @@ class ObservableWalletStore {
         const index = userWallets.ethIndex || 0
         const wallets = userWallets.ethWallets || []
         const newWallet = new Starypto.Wallet({ coinType: Starypto.coinTypes.ETH, network: NetworkStore.currentNetwork }, null, address)
+        // const walletWithBalance = await this.fetchBalanceWallet(newWallet)
         if (!name) {
           newWallet.cardName = `My wallet ${wallets.length}`
         } else {
@@ -544,7 +537,7 @@ class ObservableWalletStore {
         const isExist = this.checkIsWalletExist(wallets, address)
         if (isExist) {
           this.isLoadingImportAddress = false
-          NavigationStore.showPopup('Wallet is exist')
+          NavStore.popupCustom.show('wallet is exist')
           return
         }
         const data = {
@@ -560,7 +553,7 @@ class ObservableWalletStore {
         resolve()
       } catch (e) {
         this.isLoadingImportAddress = false
-        NavigationStore.showPopup('Invalid Address')
+        NavStore.popupCustom.show('Invalid Address')
       }
     })
   }

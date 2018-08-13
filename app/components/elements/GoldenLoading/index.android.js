@@ -1,14 +1,19 @@
 import React, { Component } from 'react'
-import { StyleSheet } from 'react-native'
+import {
+  StyleSheet
+} from 'react-native'
 import RNGoldenLoading from '../../../../Libs/rn-golden-loading'
-// import images from '../../../commons/images'
+import images from '../../../commons/images'
 
 const circleSize = 120
 
 export default class GoldenLoading extends Component {
-  stop() {}
 
-  startAnimation() {}
+  stop() {
+  }
+
+  startAnimation() {
+  }
 
   render() {
     return (

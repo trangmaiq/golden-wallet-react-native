@@ -1,6 +1,6 @@
 import Helper from '../commons/Helper'
 import CurrencyStore from '../stores/CurrencyStore'
-import Starypto from '../../Libs/react-native-starypto'
+import Starypto from './../../Libs/react-native-starypto'
 import NetworkStore from '../stores/NetworkStore'
 
 class WalletParser {

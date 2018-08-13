@@ -7,8 +7,7 @@ import {
   Text,
   TouchableOpacity,
   TouchableWithoutFeedback,
-  Platform,
-  Clipboard
+  Platform
 } from 'react-native'
 
 import { observer } from 'mobx-react/native'
@@ -25,7 +24,7 @@ import images from '../../../commons/images'
 import HapticHandler from '../../../Handler/HapticHandler'
 import Helper from '../../../commons/Helper'
 import commonStyle from '../../../commons/commonStyles'
-import NavStore from '../../../stores/NavStore'
+import MainStore from '../../../AppStores/MainStore'
 
 const { width, height } = Dimensions.get('window')
 const isSmallScreen = height < 569
@@ -36,27 +35,20 @@ const cardHeight = height - 200 - marginTop - 5
 @observer
 export default class LargeCard extends Component {
   static propTypes = {
-    cardItem: PropTypes.object,
     style: PropTypes.object,
-    isNew: PropTypes.bool,
-    navigation: PropTypes.object,
     onPress: PropTypes.func,
-    onAddPrivateKey: PropTypes.func
+    onAddPrivateKey: PropTypes.func,
+    index: PropTypes.number.isRequired,
+    onCopy: PropTypes.func,
+    onBackup: PropTypes.func
   }
 
   static defaultProps = {
-    cardItem: {
-      background: 'backgroundBlue',
-      cardName: 'Jason Nguyen',
-      balance: '0 ETH',
-      balanceUSD: '$0',
-      address: '0x27fa68a776af552d73c77631bcfcb8f47b1b62e9'
-    },
-    isNew: false,
     style: {},
-    navigation: {},
     onPress: () => { },
-    onAddPrivateKey: () => { }
+    onAddPrivateKey: () => { },
+    onCopy: () => { },
+    onBackup: () => { }
   }
 
   constructor(props) {
@@ -65,6 +57,16 @@ export default class LargeCard extends Component {
     this.state = {
       isFlipped: false
     }
+  }
+
+  componentDidMount() {
+    this.wallet && this.wallet.fetchingBalance()
+  }
+
+  get wallet() {
+    const { index } = this.props
+    const { length } = MainStore.appState.wallets
+    return index < length ? MainStore.appState.wallets[index] : null
   }
 
   _handleSecretBalance = debounce((wallet, index) => {
@@ -89,29 +91,55 @@ export default class LargeCard extends Component {
     }
   }
 
-  render() {
-    const {
-      isNew,
-      cardItem,
-      style,
-      navigation,
-      onPress,
-      onAddPrivateKey
-    } = this.props
+  renderAddCard = () => {
+    const { onPress } = this.props
+    return (
+      <TouchableWithoutFeedback
+        style={[styles.container]}
+        onPress={onPress}
+      >
+        <View style={[styles.container, { marginTop: 20, margin: 5 }]}>
+          <Image
+            style={{
+              height: cardHeight, width: cardWidth, position: 'absolute', borderRadius: 14
+            }}
+            source={images.background_add_wallet}
+            resizeMode="stretch"
+          />
+          <Image
+            style={{ marginTop: cardHeight * 0.35 }}
+            source={images.iconLargeAdd}
+          />
+          <Text
+            style={{
+              color: AppStyle.mainColor,
+              fontFamily: 'OpenSans-Semibold',
+              fontSize: 20,
+              marginTop: cardHeight * 0.08
+            }}
+          >
+            Add new wallet
+          </Text>
+        </View>
+      </TouchableWithoutFeedback>
+    )
+  }
 
+  renderFrontCard = (wallet) => {
     const {
-      background,
-      cardName,
-      // balance,
-      // balanceUSD,
-      enableSecretBalance,
-      address,
+      onPress, style, onAddPrivateKey, onBackup
+    } = this.props
+    const {
+      title,
       importType,
-      balanceValue,
-      balanceUSDValue
-    } = cardItem
-    const isShow = enableSecretBalance === undefined ? true : enableSecretBalance
-    const backgroundCard = isNew ? AppStyle.backgroundColor : AppStyle[background]
+      totalBalanceETH,
+      totalBalanceDollar,
+      isFetchingBalance,
+      isHideValue
+    } = wallet
+
+    const isHide = isHideValue
+    const backgroundCard = AppStyle.mode1
 
     const actionButton = (<ActionButton
       buttonItem={{
@@ -123,13 +151,71 @@ export default class LargeCard extends Component {
         this.setState({ isFlipped: !this.state.isFlipped })
       }}
     />)
-    const colorBalance = { color: AppStyle.mainColor }
-    const colorBalanceUSD = { color: AppStyle.secondaryTextColor }
-    const balanceSecret = isShow ? balanceValue : constant.SECRET_WORK
-    const balanceUSDSecret = isShow
-      ? balanceUSDValue
-      : constant.SECRET_WORK
 
+    const balanceSecret = !isHide ? `${Helper.formatETH(totalBalanceETH.toString(10))} ETH` : constant.SECRET_WORK
+    const balanceUSDSecret = !isHide
+      ? `$${Helper.formatUSD(totalBalanceDollar.toString(10))}`
+      : constant.SECRET_WORK
+    return (
+      <TouchableWithoutFeedback
+        style={[styles.container, { backgroundColor: backgroundCard }, style]}
+        onPress={onPress}
+      >
+        <View style={[styles.container, { backgroundColor: backgroundCard }, style]}>
+          <View style={styles.cardHeader}>
+            <Text
+              numberOfLines={1}
+              ellipsizeMode="tail"
+              style={styles.cardName}
+            >
+              {title}
+            </Text>
+            {!importType && !MainStore.appState.didBackup &&
+              <TouchableOpacity
+                onPress={onBackup}
+              >
+                <View style={styles.backupField}>
+                  <Text style={styles.backupText}>
+                    {constant.BACKUP}
+                  </Text>
+                </View>
+              </TouchableOpacity>
+            }
+            {importType &&
+              <TouchableWithoutFeedback
+                onPress={() => {
+                  (importType === 'Address') && onAddPrivateKey()
+                }}
+              >
+                <View style={this._getStyleOfView(importType)}>
+                  <Text style={this._getStyleOfText(importType)}>
+                    {importType === 'Address' ? 'Address Only' : importType}
+                  </Text>
+                </View>
+              </TouchableWithoutFeedback>
+            }
+          </View>
+          <Image
+            style={[
+              styles.imgCard,
+              { marginTop: cardHeight * 0.07 }
+            ]}
+            source={images.imgCardETH}
+          />
+          <Text style={[styles.balance]}>{balanceSecret}</Text>
+          <Text style={[styles.balanceUSD, { marginBottom: 6 }]}>{balanceUSDSecret}</Text>
+          {isFetchingBalance && <SyncBalance />}
+          <View style={{ position: 'absolute', bottom: isSmallScreen ? 10 : 20 }}>
+            {actionButton}
+          </View>
+        </View>
+      </TouchableWithoutFeedback>
+    )
+  }
+
+  renderBackCard = () => {
+    const { style, onCopy } = this.props
+    const { address, title } = this.wallet
     const copyText = Platform.OS === 'ios'
       ? (
         <View style={styles.backgroundCopy}>
@@ -147,37 +233,54 @@ export default class LargeCard extends Component {
           {constant.COPY}
         </Text>
       )
-    if (isNew) {
-      return (
-        <TouchableWithoutFeedback
-          style={[styles.container]}
-          onPress={onPress}
-        >
-          <View style={[styles.container, { marginTop: 20, margin: 5 }]}>
-            <Image
-              style={{
-                height: cardHeight, width: cardWidth, position: 'absolute', borderRadius: 14
-              }}
-              source={images.background_add_wallet}
-              resizeMode="stretch"
+    return (
+      <TouchableWithoutFeedback
+        onPress={() => {
+          this.setState({ isFlipped: !this.state.isFlipped })
+        }}
+      >
+        <View style={[styles.container, { backgroundColor: 'white' }, style]}>
+          <Image
+            style={{
+              position: 'absolute',
+              top: 0,
+              borderRadius: 14,
+              width: width - 82,
+              height: cardHeight
+            }}
+            source={images.backgroundGrey}
+          />
+          <View style={{ marginTop: cardHeight * 0.12 }}>
+            <QRCode
+              value={address}
+              size={isSmallScreen ? cardHeight * 0.36 : 200}
+              bgColor="black"
+              fgColor="white"
             />
-            <Image
-              style={{ marginTop: cardHeight * 0.35 }}
-              source={images.iconLargeAdd}
-            />
-            <Text
-              style={{
-                color: AppStyle.mainColor,
-                fontFamily: 'OpenSans-Semibold',
-                fontSize: 20,
-                marginTop: cardHeight * 0.08
-              }}
-            >
-              Add new wallet
-            </Text>
           </View>
-        </TouchableWithoutFeedback>
-      )
+          <Text
+            numberOfLines={1}
+            ellipsizeMode="tail"
+            style={styles.cardBackName}
+          >
+            {title}
+          </Text>
+          <Text style={[styles.cardBackAddress, commonStyle.fontAddress]}>{address}</Text>
+          <TouchableOpacity
+            onPress={onCopy}
+            style={{ marginTop: cardHeight * 0.06 }}
+          >
+            {copyText}
+          </TouchableOpacity>
+        </View>
+      </TouchableWithoutFeedback>
+    )
+  }
+
+  render() {
+    const { wallet } = this
+    if (!wallet) {
+      return this.renderAddCard()
     }
     return (
       <FlipCard
@@ -191,107 +294,8 @@ export default class LargeCard extends Component {
           HapticHandler.ImpactLight()
         }}
       >
-
-        <TouchableWithoutFeedback
-          style={[styles.container, { backgroundColor: backgroundCard }, style]}
-          onPress={onPress}
-        >
-          <View style={[styles.container, { backgroundColor: backgroundCard }, style]}>
-            <View style={styles.cardHeader}>
-              <Text
-                numberOfLines={1}
-                ellipsizeMode="tail"
-                style={styles.cardName}
-              >
-                {cardName}
-              </Text>
-              {/* {!WalletStore.isBackup && !importType && */}
-              {!importType &&
-                <TouchableOpacity
-                  onPress={() => {
-                    navigation.navigate('BackupScreen')
-                  }}
-                >
-                  <View style={styles.backupField}>
-                    <Text style={styles.backupText}>
-                      {constant.BACKUP}
-                    </Text>
-                  </View>
-                </TouchableOpacity>
-              }
-              {importType &&
-                <TouchableWithoutFeedback
-                  onPress={() => {
-                    (importType === 'Address') && onAddPrivateKey()
-                  }}
-                >
-                  <View style={this._getStyleOfView(importType)}>
-                    <Text style={this._getStyleOfText(importType)}>
-                      {importType === 'Address' ? 'Address Only' : importType}
-                    </Text>
-                  </View>
-                </TouchableWithoutFeedback>
-              }
-            </View>
-            <Image
-              style={[
-                styles.imgCard,
-                { marginTop: isNew ? cardHeight * 0.2 : cardHeight * 0.07 }
-              ]}
-              source={images.imgCardETH}
-            />
-            <Text style={[styles.balance, colorBalance]}>{`${Helper.formatETH(balanceSecret)} ETH`}</Text>
-            <Text style={[styles.balanceUSD, colorBalanceUSD, { marginBottom: 6 }]}>{`$${Helper.formatUSD(balanceUSDSecret)}`}</Text>
-            <SyncBalance />
-            <View style={{ position: 'absolute', bottom: isSmallScreen ? 10 : 20 }}>
-              {actionButton}
-            </View>
-          </View>
-        </TouchableWithoutFeedback>
-
-        <TouchableWithoutFeedback
-          onPress={() => {
-            this.setState({ isFlipped: !this.state.isFlipped })
-          }}
-        >
-          <View style={[styles.container, { backgroundColor: 'white' }, style]}>
-            <Image
-              style={{
-                position: 'absolute',
-                top: 0,
-                borderRadius: 14,
-                width: width - 82,
-                height: cardHeight
-              }}
-              source={images.backgroundGrey}
-            />
-            <View style={{ marginTop: cardHeight * 0.12 }}>
-              <QRCode
-                value={address}
-                size={isSmallScreen ? cardHeight * 0.36 : 200}
-                bgColor="black"
-                fgColor="white"
-              />
-            </View>
-            <Text
-              numberOfLines={1}
-              ellipsizeMode="tail"
-              style={styles.cardBackName}
-            >
-              {cardName}
-            </Text>
-            <Text style={[styles.cardBackAddress, commonStyle.fontAddress]}>{address}</Text>
-            <TouchableOpacity
-              onPress={() => {
-                Clipboard.setString(address)
-                NavStore.showToastTop('Copied', {}, { color: AppStyle.mainColor })
-              }}
-              style={{ marginTop: cardHeight * 0.06 }}
-            >
-              {copyText}
-            </TouchableOpacity>
-          </View>
-        </TouchableWithoutFeedback>
+        {this.renderFrontCard(wallet)}
+        {this.renderBackCard()}
       </FlipCard>
     )
   }
@@ -344,14 +348,16 @@ const styles = StyleSheet.create({
     fontSize: isSmallScreen ? 20 : 30,
     fontFamily: 'OpenSans-Bold',
     textAlign: 'center',
-    marginTop: isSmallScreen ? cardHeight * 0.02 : 20
+    marginTop: isSmallScreen ? cardHeight * 0.02 : 20,
+    color: AppStyle.mainColor
   },
   balanceUSD: {
     fontSize: isSmallScreen ? 15 : 24,
     fontFamily: Platform.OS === 'ios' ? 'OpenSans' : 'OpenSans-Regular',
     alignSelf: 'center',
     textAlign: 'center',
-    marginTop: isSmallScreen ? cardHeight * 0.01 : 10
+    marginTop: isSmallScreen ? cardHeight * 0.01 : 10,
+    color: AppStyle.secondaryTextColor
   },
   cardBackName: {
     fontSize: 20,

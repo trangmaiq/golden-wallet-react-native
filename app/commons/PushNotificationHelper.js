@@ -7,7 +7,7 @@ class PushNotificationHelper {
   }
 
   setBadgeNumber(number) {
-    FCM.setBadgeNumber(number)
+    FCM.setBadgeNumber(0)
   }
 
   getToken() {

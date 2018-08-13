@@ -8,6 +8,7 @@ import images from '../../../commons/images'
 const circleSize = 120
 
 export default class GoldenLoading extends Component {
+
   stop() {
   }
 

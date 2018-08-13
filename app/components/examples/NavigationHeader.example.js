@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import { View, Platform } from 'react-native'
 import { getStatusBarHeight } from 'react-native-status-bar-height'
-import NavigationHeader from '../elements/NavigationHeader'
-import constant from '../../commons/constant'
-import images from '../../commons/images'
+import NavigationHeader from './../elements/NavigationHeader'
+import constant from './../../commons/constant'
+import images from './../../commons/images'
 import AppStyle from '../../commons/AppStyle'
 
 const marginTop = Platform.OS === 'ios' ? getStatusBarHeight() : 0

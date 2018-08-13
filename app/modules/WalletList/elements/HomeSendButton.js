@@ -1,37 +1,24 @@
 import React, { Component } from 'react'
+import { observer } from 'mobx-react/native'
 import { View } from 'react-native'
 import PropTypes from 'prop-types'
 import ActionButton from '../../../components/elements/ActionButton'
 import constant from '../../../commons/constant'
 import images from '../../../commons/images'
 import AppStyle from '../../../commons/AppStyle'
+import MainStore from '../../../AppStores/MainStore'
 
+@observer
 export default class HomeSendButton extends Component {
   static propTypes = {
-    isShow: PropTypes.bool.isRequired,
     action: PropTypes.func.isRequired
   }
 
-  constructor(props) {
-    super(props)
-    this.state = {
-      isShow: null
-    }
-  }
-
-  _toggleSendButton(isShow) {
-    if (isShow !== this.state.isShow) {
-      this.setState({
-        isShow
-      })
-    }
-  }
-
   render() {
-    const { action, isShow } = this.props
-    const shouldShow = this.state.isShow !== null ? this.state.isShow : isShow
+    const { action } = this.props
+    const { isShowSendButton } = MainStore.appState
 
-    if (!shouldShow) {
+    if (!isShowSendButton) {
       return <View />
     }
     return (

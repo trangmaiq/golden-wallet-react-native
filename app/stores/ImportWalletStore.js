@@ -1,5 +1,5 @@
 import { observable, action, computed } from 'mobx'
-import Starypto from '../../Libs/react-native-starypto'
+import Starypto from './../../Libs/react-native-starypto'
 import WalletParser from '../Handler/WalletParser'
 import NetworkStore from './NetworkStore'
 
@@ -39,6 +39,7 @@ class ObservableImportWalletStore {
       const validateMnemonic = this.validateMnemonic(mnemonic)
       if (!validateMnemonic) {
         this.isFetchingWalletViaMnemonic = false
+        // alert('Invalid Mnemonic')
         return reject(Error('Invalid Mnemonic'))
       }
       if (this.walletsViaMnemonicMap[mnemonic]) {

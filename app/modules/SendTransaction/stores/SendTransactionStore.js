@@ -6,11 +6,11 @@ import { toBigNumber, fromEther } from '../../../wallet/ethereum/txUtils'
 import TransactionStore from '../../../stores/TransactionStore'
 import constant from '../../../commons/constant'
 import CurrencyStore from '../../../stores/CurrencyStore'
+import NavStore from '../../../stores/NavStore'
+import Helper from '../../../commons/Helper'
+var BN = require('bn.js')
 
-const BN = require('bn.js')
-
-// const diffGas = 0.000048
-
+const diffGas = 0.000048
 class SendTransactionStore {
   @observable.ref addressModal = null
   @observable.ref qrCodeModal = null
@@ -23,7 +23,6 @@ class SendTransactionStore {
   @observable.ref isSendToken = false
   @observable.ref inputValue = null
   @observable wallet = {
-    address: '',
     postfix: 'ETH',
     balanceCrypto: 0,
     balanceUSD: 0,
@@ -71,6 +70,7 @@ class SendTransactionStore {
   }
 
   @action updateValue(value) {
+    console.log('update value: ', value)
     this.transaction.value = value
   }
 
@@ -118,18 +118,17 @@ class SendTransactionStore {
 
   @action validateAmount() {
     const wallet = WalletStore.selectedWallet
-    const balance = wallet.balanceETH || 0
+    const { balance } = wallet
     const { gasLimit, gasPrice } = this.transaction
 
     const balanceBN = Starypto.Units.parseUnits(`${balance}`, 18)._bn
-
     const gasPriceBN = new BN(`${gasPrice}`)
     const gasLimitBN = new BN(`${gasLimit}`)
 
     const gasBN = gasLimitBN.mul(gasPriceBN).div(new BN('1000000000'))
     const maxBN = balanceBN.sub(gasBN)
 
-    if (this.selectedToken.title !== 'ETH') return maxBN.gte(new BN('0')) // token
+    if (this.selectedToken.title !== 'ETH') return maxBN.lt(new BN('0')) // token
 
     if (maxBN.lt(new BN('0'))) {
       this.updateValue(0)
@@ -141,6 +140,8 @@ class SendTransactionStore {
       this.updateValue(this.inputValue)
     }
     return true
+
+
   }
 
   @action estimateGas() {
@@ -168,85 +169,73 @@ class SendTransactionStore {
   }
 
   sendETH() {
-    // !this.transaction.gasLimit && this.estimateGas()
+    !this.transaction.gasLimit && this.estimateGas()
     if (!this.validateAmount()) {
+      NavStore.hideLoading()
       const err = { message: 'Not enough gas to send this transaction' }
       return Promise.reject(err)
     }
     const valueFormat = this.transaction.value ? fromEther(this.transaction.value).toString(16) : this.transaction.value
     const transactionSend = { ...this.transaction, value: toBigNumber(valueFormat) }
-
+    
     const wallet = this.getWalletSendTransaction(this.getPrivateKey())
     return new Promise((resolve, reject) => {
+      NavStore.showLoading()
       wallet.sendTransaction(transactionSend)
         .then((tx) => {
           const txTempt = this.generatePendingTransaction(tx, { title: 'ETH' }, 18)
-
+          
           TransactionStore.addPendingTransaction(
             wallet.address.toLowerCase(),
             txTempt
           )
+          NavStore.hideLoading()
+          // this.transaction = {}
           return resolve(txTempt)
         })
         .catch((err) => {
+          NavStore.hideLoading()
           return reject(err)
         })
     })
   }
 
   sendToken() {
-    // !this.transaction.gasLimit && this.estimateGas()
+    !this.transaction.gasLimit && this.estimateGas()
     if (!this.validateAmount()) {
+      NavStore.hideLoading()
       const err = { message: 'Not enough gas to send this transaction' }
       return Promise.reject(err)
     }
-    const wallet = this.getWalletSendTransaction(this.getPrivateKey())
+    const wallet = WalletStore.selectedWallet
     const token = this.selectedToken
-
     const {
       to,
-      value,
-      gasLimit,
-      gasPrice
+      value
     } = this.transaction
     const valueSend = toBigNumber(value)
     return new Promise((resolve, reject) => {
+      NavStore.showLoading()
       Starypto.ContractUtils.parseContract(token.address)
         .then((contract) => {
           const numberOfDecimals = contract.tokenInfo.decimals
           const numberOfTokens = Starypto.Units.parseUnits(`${valueSend}`, numberOfDecimals)
-          const inf = new Starypto.Interface(contract.abi)
-          const transfer = inf.functions.transfer(to, numberOfTokens)
-          const unspendTransaction = {
-            data: transfer.data,
-            to: token.address,
-            gasLimit,
-            gasPrice
-          }
 
-          wallet.sendTransaction(unspendTransaction).then((tx) => {
+          const ct = new Starypto.Contract(token.address, contract.abi, wallet)
+          ct.transfer(to, numberOfTokens).then((tx) => {
             const txTempt = this.generatePendingTransaction(tx, token, contract.tokenInfo.decimals)
             TransactionStore.addPendingTransaction(
               token.address,
               txTempt
             )
+            NavStore.hideLoading()
             return resolve(txTempt)
           }).catch((err) => {
+            NavStore.hideLoading()
             return reject(err)
           })
-
-          // const ct = new Starypto.Contract(token.address, contract.abi, wallet)
-          // ct.transfer(to, numberOfTokens).then((tx) => {
-          //   const txTempt = this.generatePendingTransaction(tx, token, contract.tokenInfo.decimals)
-          //   TransactionStore.addPendingTransaction(
-          //     token.address,
-          //     txTempt
-          //   )
-          //   return resolve(txTempt)
-          // }).catch((err) => {
-          //   return reject(err)
-          // })
         }).catch((err) => {
+          NavStore.hideLoading()
           return reject(err)
         })
     })
@@ -254,11 +243,7 @@ class SendTransactionStore {
 
   generatePendingTransaction(txHash, token, tokenDecimal) {
     const wallet = WalletStore.selectedWallet
-    const {
-      to,
-      value
-      // gasLimit
-    } = this.transaction
+    const { to, value, gasLimit } = this.transaction
     const pendingTransaction = {
       type: constant.SENT,
       status: 0,

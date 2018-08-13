@@ -3,8 +3,8 @@ import { } from 'react-native'
 import PropTypes from 'prop-types'
 import ScrollableTabView, { DefaultTabBar } from 'react-native-scrollable-tab-view'
 import AppStyle from '../../commons/AppStyle'
-import TabComponent from '../elements/TabComponent'
-import TabScreen from '../elements/TabScreen'
+import TabComponent from './../elements/TabComponent'
+import TabScreen from './../elements/TabScreen'
 
 export default class FirstScreen extends Component {
   static propTypes = {

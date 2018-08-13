@@ -1,62 +1,58 @@
 import React, { Component } from 'react'
 import {
-  TouchableWithoutFeedback,
-  View,
+  Animated,
   StyleSheet,
   Dimensions,
   Text
 } from 'react-native'
-import { isIphoneX } from 'react-native-iphone-x-helper'
-import PropTypes from 'prop-types'
-import AppStyle from '../../commons/AppStyle'
-import NavigationStore from '../../navigation/NavigationStore'
-import ScreenID from '../../navigation/ScreenID'
+// import PropTypes from 'prop-types'
+import HapticHandler from '../../Handler/HapticHandler'
 
 const { width } = Dimensions.get('window')
 
 export default class CreateWalletScreen extends Component {
-  static propTypes = {
-    content: PropTypes.string,
-    styleText: PropTypes.object,
-    style: PropTypes.object,
-    information: PropTypes.object
+  state = {
+    offsetToast: new Animated.Value(-100),
+    content: '',
+    styleText: {},
+    style: {}
   }
 
-  static defaultProps = {
-    content: 'Gáy lên',
-    styleText: {},
-    style: {},
-    information: {}
+  showToast(content, style = {}, styleText = {}) {
+    this.setState({
+      content,
+      style,
+      styleText
+    })
+    setTimeout(() => HapticHandler.ImpactLight(), 100)
+    Animated.timing(this.state.offsetToast, {
+      toValue: 0,
+      duration: 250
+    }).start()
+    setTimeout(() => this.hideToast(), 1000)
+  }
+
+  hideToast() {
+    Animated.timing(this.state.offsetToast, {
+      toValue: -100,
+      duration: 250
+    }).start()
   }
 
   render() {
-    const {
-      content,
-      styleText,
-      style,
-      information
-    } = this.props
+    const { content, style, styleText } = this.state
     return (
-      <View style={[styles.container, style]}>
-        <TouchableWithoutFeedback
-          style={{ flex: 1 }}
-          onPress={() => {
-            if (information) {
-              NavigationStore.navigateTo(ScreenID.TransactionDetailScreen, information)
+      <Animated.View
+        style={[styles.container, {
+          transform: [
+            {
+              translateY: this.state.offsetToast
             }
-          }}
-        >
-          <View style={{
-            flex: 1,
-            alignItems: AppStyle.Align.center,
-            justifyContent: AppStyle.Align.flexEnd
-          }}
-          >
-            <Text style={[styles.copyText, styleText]}>{content}</Text>
-          </View>
-
-        </TouchableWithoutFeedback>
-      </View>
+          ]
+        }, style]}
+      >
+        <Text style={[styles.copyText, styleText]}>{content}</Text>
+      </Animated.View>
     )
   }
 }
@@ -64,15 +60,16 @@ export default class CreateWalletScreen extends Component {
 const styles = StyleSheet.create({
   container: {
     width,
-    height: isIphoneX() ? 100 : 80,
-    backgroundColor: AppStyle.Color.backgroundToast
+    height: 100,
+    backgroundColor: '#212637',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    position: 'absolute'
   },
-
   copyText: {
-    paddingHorizontal: 16,
     fontSize: 16,
-    fontFamily: AppStyle.mainFontSemiBold,
-    color: AppStyle.mainColor,
+    fontFamily: 'OpenSans-Bold',
+    color: '#4A90E2',
     marginBottom: 10
   }
 })

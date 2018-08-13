@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import {
+  SafeAreaView,
   View,
   Text,
   StyleSheet,
@@ -10,34 +11,27 @@ import {
   Animated
 } from 'react-native'
 import { getStatusBarHeight } from 'react-native-status-bar-height'
-import { observer, PropTypes } from 'mobx-react/native'
+import { observer } from 'mobx-react/native'
+import PropTypes from 'prop-types'
 import debounce from 'lodash.debounce'
+import { NavigationActions } from 'react-navigation'
 import AppStyle from '../../../commons/AppStyle'
 import images from '../../../commons/images'
 import Modal from '../../../../Libs/react-native-modalbox'
 import constant from '../../../commons/constant'
 import KeyboardButton from '../elements/KeyboardButton'
 import AnimationInput from '../elements/AnimationInput'
-import sendTransactionStore from '../stores/SendTransactionStore'
 import SelectedCoinScreen from './SelectedCoinScreen'
-import WalletStore from '../../../stores/WalletStore'
-import Starypto from '../../../../Libs/react-native-starypto'
-import Helper from '../../../commons/Helper'
 import HapticHandler from '../../../Handler/HapticHandler'
-import NavigationStore from '../../../navigation/NavigationStore'
-import ScreenID from '../../../navigation/ScreenID'
-import NetworkStore from '../../../stores/NetworkStore'
-import Network from '../../../Network'
-import { isIphoneX } from '../../../../node_modules/react-native-iphone-x-helper'
-// import sendStore from '../../../stores/SendTransactionStore'
+import MainStore from '../../../AppStores/MainStore'
+import { BigNumber } from 'bignumber.js'
+
 // const BN = require('bn.js')
 
 const { height } = Dimensions.get('window')
 const marginTop = Platform.OS === 'ios' ? getStatusBarHeight() : 20
-// const isSmallScreen = height < 569
 const isSmallScreen = height < 650
 const isIPX = height === 812
-// const diffGas = 0.000048
 
 const dataNumber1 = [
   { number: '1' },
@@ -64,62 +58,41 @@ const dataNumber4 = [
     actions: 'delete'
   }
 ]
-
 @observer
 export default class SendTransactionScreen extends Component {
-  static navigatorStyle = {
-    navBarHidden: true
-  }
-
   static propTypes = {
-    navigator: PropTypes.object
+    navigation: PropTypes.object
   }
 
   static defaultProps = {
-    navigator: {}
+    navigation: {}
   }
+
   constructor(props) {
     super(props)
-    this.wallet = WalletStore.selectedWallet
-  }
-
-  componentWillMount() {
-    NavigationStore.navigations.push(this.props.navigator)
-    NavigationStore.navigation = this.props.navigator
-  }
-
-  componentDidMount() {
-    sendTransactionStore.getGasPrice()
-    if (NetworkStore.currentNetwork !== Network.MainNet) {
-      NavigationStore.showToast(`You are on ${NetworkStore.getNetworkCapitalize()} Testnet`)
-    }
+    this.amountStore = MainStore.sendTransaction.amountStore
   }
 
   _onKeyPress = debounce((text) => {
     HapticHandler.ImpactLight()
-    this.input.add({ text })
+    this.amountStore.add({ text })
   }, 0)
 
   _onBackPress = debounce(() => {
-    this.input.remove()
+    this.amountStore.remove()
   }, 0)
 
   _onLongPress = debounce(() => {
-    this.input.clearAll()
+    this.amountStore.clearAll()
   }, 0)
 
-  formatArrayToNumberFloat(data, subData, type) {
-    const array = [...data, ...subData]
-    let string = ''
-    array.forEach((element) => {
-      string += element.text
-    })
-    const value = Number.isNaN(parseFloat(string.replace(/,/g, ''))) ? 0 : parseFloat(string.replace(/,/g, ''))
-    return type ? +value.toFixed(2) : +value.toFixed(4)
+  _onMaxPress = () => {
+    this.amountStore.max()
   }
 
-  checkAmount(inputStr, balanceStr) {
-    return Starypto.Units.parseUnits(inputStr, 18)._bn.lte(Starypto.Units.parseUnits(balanceStr, 18)._bn)
+  _onSendPress = () => {
+    this.props.navigation.navigate('AddressInputScreen')
+    this.amountStore.send()
   }
 
   renderSelectedCoinModal = () => {
@@ -135,10 +108,10 @@ export default class SendTransactionScreen extends Component {
         }}
         swipeToClose
         onClosed={() => {
-          sendTransactionStore.selectedModal && sendTransactionStore.selectedModal.close()
+          this.amountStore.selectedCoinModal && this.amountStore.selectedCoinModal.close()
         }}
         position="bottom"
-        ref={(ref) => { sendTransactionStore.selectedModal = ref }}
+        ref={(ref) => { this.amountStore.setSelectedCoinModal(ref) }}
       >
         <View style={{ flex: 1, zIndex: 120, backgroundColor: AppStyle.backgroundColor }}>
           <View
@@ -160,9 +133,6 @@ export default class SendTransactionScreen extends Component {
   }
 
   renderHeader = () => {
-    const { balanceCrypto, balanceUSD, postfix } = sendTransactionStore.wallet
-    const balance = Helper.formatETH(balanceCrypto)
-    const balanceMoney = Helper.formatUSD(balanceUSD)
     return (
       <View
         style={styles.header}
@@ -170,10 +140,7 @@ export default class SendTransactionScreen extends Component {
         <TouchableOpacity
           style={styles.exit}
           onPress={() => {
-            NavigationStore.dismissView()
-            setTimeout(() => {
-              sendTransactionStore.clearData()
-            }, 250)
+            this.props.navigation.dispatch(NavigationActions.back())
           }}
         >
           <Image style={styles.exitBtn} source={images.closeButton} resizeMode="contain" />
@@ -181,11 +148,11 @@ export default class SendTransactionScreen extends Component {
         <TouchableOpacity
           style={styles.headerTitle}
           onPress={() => {
-            sendTransactionStore.selectedModal && sendTransactionStore.selectedModal.open()
+            this.amountStore.selectedCoinModal && this.amountStore.selectedCoinModal.open()
           }}
         >
-          <Text style={styles.walletName}>{`${this.wallet.cardName} : `}</Text>
-          <Text style={styles.headerBalance}>{sendTransactionStore.numberArray.type ? `$ ${balanceMoney}` : `${balance} ${postfix}`}</Text>
+          <Text style={styles.walletName}>{this.amountStore.walletName}:</Text>
+          <Text style={styles.headerBalance}>{this.amountStore.amountHeaderString}</Text>
         </TouchableOpacity>
       </View>
     )
@@ -214,8 +181,6 @@ export default class SendTransactionScreen extends Component {
             HapticHandler.ImpactLight()
             if (num.actions === 'delete') {
               this._onBackPress()
-            } else {
-              //
             }
           }}
         >
@@ -235,47 +200,27 @@ export default class SendTransactionScreen extends Component {
     )
   }
 
-  renderInput = (prefix, postfix, cryptoBalance, moneyBalance) => {
+  renderInput = (data, subData, postfix) => {
     return (
       <View>
         <AnimationInput
-          cryptoBalance={cryptoBalance}
-          moneyBalance={moneyBalance}
-          postfix={postfix}
-          prefix={prefix}
           ref={ref => (this.input = ref)}
+          data={data}
+          postfix={postfix}
+          subData={subData}
         />
       </View>
     )
   }
 
   renderKeyboard = () => {
-    const {
-      type
-    } = sendTransactionStore.numberArray
     return (
       <View
         style={styles.keyboard}
       >
         <TouchableOpacity
-          onPress={() => {
-            HapticHandler.ImpactLight()
-            if (type) {
-              Helper.formatDecimalWithFourDigits(Helper.formatUSD(sendTransactionStore.wallet.balanceUSD), true)
-            } else {
-              Helper.formatDecimalWithFourDigits(Helper.formatETH(sendTransactionStore.wallet.balanceCrypto), false)
-            }
-          }}
-          style={{
-            height: 40,
-            paddingLeft: 32,
-            paddingRight: 32,
-            alignSelf: 'center',
-            justifyContent: 'center',
-            borderRadius: 20,
-            backgroundColor: '#0E1428',
-            marginBottom: 10
-          }}
+          style={styles.maxButton}
+          onPress={this._onMaxPress}
         >
           <Text style={{ fontSize: 16, color: '#4A90E2', fontFamily: 'OpenSans-Semibold' }}>Max</Text>
         </TouchableOpacity>
@@ -288,31 +233,13 @@ export default class SendTransactionScreen extends Component {
   }
 
   renderSendBtn() {
-    const {
-      data,
-      subData,
-      type
-    } = sendTransactionStore.numberArray
-    const amountStr = data.slice().map(s => s.text).join('')
-
-    const balanceCrypto = sendTransactionStore.wallet.balanceCrypto || 0
-    const balanceUSD = sendTransactionStore.wallet.balanceUSD || 0
-    const amountIsValidUSD = (this.checkAmount(amountStr || '0', `${balanceUSD}`))
-    const amountIsValid = (this.checkAmount(amountStr || '0', `${balanceCrypto}`))
-
     return (
       <TouchableOpacity
         style={styles.sendTo}
-        disabled={(this.formatArrayToNumberFloat(data, subData, type) == 0 && data.length + subData.length == 0) || (type ? !amountIsValidUSD : !amountIsValid)}
-        onPress={() => {
-          NavigationStore.navigateTo(ScreenID.AddressInputScreen)
-          sendTransactionStore.setValue(`${sendTransactionStore.cryptoValue}`)
-        }}
+        disabled={!this.amountStore.checkInputValid}
+        onPress={this._onSendPress}
       >
-        <Text style={[styles.sendText, {
-          color: (this.formatArrayToNumberFloat(data, subData, type) == 0 && data.length + subData.length == 0) || (type ? !amountIsValidUSD : !amountIsValid) ? AppStyle.greyTextInput : AppStyle.mainColor
-        }]}
-        >
+        <Text style={[styles.sendText, { color: this.amountStore.checkInputValid ? AppStyle.mainColor : AppStyle.greyTextInput }]}>
           {constant.SEND_TO}
         </Text>
       </TouchableOpacity>
@@ -320,20 +247,27 @@ export default class SendTransactionScreen extends Component {
   }
 
   render() {
+    const {
+      data,
+      subData,
+      isUSD,
+      isHadPoint
+    } = this.amountStore.getAmountText
+    // console.log(new BigNumber('111111.12e+18').toString(10))
     return (
-      <View
+      <SafeAreaView
         style={styles.container}
       >
         <View style={styles.viewContainer}>
           {this.renderHeader()}
-          {this.renderInput('$', sendTransactionStore.wallet.postfix, sendTransactionStore.wallet.balanceCrypto, sendTransactionStore.wallet.balanceUSD)}
+          {this.renderInput(this.amountStore.getAmountText, this.amountStore.amountSubTextString, this.amountStore.postfix)}
           <View>
             {this.renderKeyboard()}
             {this.renderSendBtn()}
           </View>
         </View>
         {this.renderSelectedCoinModal()}
-      </View>
+      </SafeAreaView>
     )
   }
 }
@@ -346,7 +280,6 @@ const styles = StyleSheet.create({
   viewContainer: {
     flex: 1,
     paddingTop: marginTop,
-    paddingBottom: isIphoneX ? 30 : 0,
     justifyContent: 'space-between'
   },
   header: {
@@ -366,7 +299,7 @@ const styles = StyleSheet.create({
   },
   walletName: {
     color: AppStyle.mainTextColor,
-    fontFamily: AppStyle.mainFontSemiBold,
+    fontFamily: 'OpenSans-Semibold',
     fontSize: 16,
     fontWeight: '600',
     fontStyle: 'normal'
@@ -392,17 +325,21 @@ const styles = StyleSheet.create({
   numberField: {
     width: isSmallScreen ? 65 : 75,
     height: isSmallScreen ? 65 : 75,
+    // borderRadius: 37.5,
+    // backgroundColor: AppStyle.colorPinCode,
     alignItems: 'center',
     justifyContent: 'center',
     marginHorizontal: 13
   },
   numberText: {
+    // fontFamily: 'OpenSans-Semibold',
     fontSize: 30,
     color: 'white'
   },
   arrayNumber: {
     flexDirection: 'row',
     justifyContent: 'space-between'
+    // marginTop: height * 0.01
   },
   keyboard: {
     marginLeft: 30,
@@ -410,14 +347,24 @@ const styles = StyleSheet.create({
   },
   sendTo: {
     margin: 20,
-    alignItems: AppStyle.Align.center,
-    justifyContent: AppStyle.Align.center,
+    alignItems: 'center',
+    justifyContent: 'center',
     height: 50,
     borderRadius: 5,
     backgroundColor: AppStyle.backgroundDarkBlue
   },
   sendText: {
     fontSize: 18,
-    fontFamily: AppStyle.mainFontSemiBold
+    fontFamily: 'OpenSans-Semibold'
+  },
+  maxButton: {
+    height: 40,
+    paddingLeft: 32,
+    paddingRight: 32,
+    alignSelf: 'center',
+    justifyContent: 'center',
+    borderRadius: 20,
+    backgroundColor: '#0E1428',
+    marginBottom: 10
   }
 })

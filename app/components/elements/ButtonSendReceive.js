@@ -7,9 +7,7 @@ import PropTypes from 'prop-types'
 import ActionButton from './ActionButton'
 import constant from '../../commons/constant'
 import images from '../../commons/images'
-import WalletStore from '../../stores/WalletStore'
 import AppStyle from '../../commons/AppStyle'
-import NavigationStore from '../../navigation/NavigationStore'
 
 export default class ButtonSendReveive extends Component {
   static propTypes = {
@@ -43,13 +41,7 @@ export default class ButtonSendReveive extends Component {
             icon: images.iconSend,
             background: '#121734'
           }}
-          action={() => {
-            if (WalletStore.selectedWallet.privateKey !== null) {
-              openSend()
-            } else {
-              NavigationStore.showPopup('This wallet can not send a transaction')
-            }
-          }}
+          action={() => openSend()}
           styleText={{ color: AppStyle.mainColor }}
           styleIcon={{ tintColor: AppStyle.mainColor }}
         />
@@ -63,7 +55,7 @@ export default class ButtonSendReveive extends Component {
             icon: images.iconQrCode,
             background: '#121734'
           }}
-          action={openReceive}
+          action={() => openReceive()}
           styleText={{ color: AppStyle.backgroundWhite }}
           styleIcon={{ tintColor: AppStyle.backgroundWhite }}
         />
