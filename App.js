@@ -15,8 +15,6 @@ import {
 import crashlytics from 'react-native-fabric-crashlytics'
 import SplashScreen from 'react-native-splash-screen'
 import Router from './app/Router'
-import SettingStore from './app/stores/SettingStore'
-import walletStore from './app/stores/WalletStore'
 import currencyStore from './app/stores/CurrencyStore'
 import NavStore from './app/stores/NavStore'
 import BlindScreen from './app/components/screens/BlindScreen'
@@ -27,7 +25,6 @@ import NotificationListenter from './app/NotificationListener'
 import PushNotificationHelper from './app/commons/PushNotificationHelper'
 import Spinner from './app/components/elements/Spinner'
 import MainStore from './app/AppStores/MainStore'
-import Authen from './app/secure/Authen'
 
 console.ignoredYellowBox = ['Warning: isMounted']
 
@@ -40,8 +37,6 @@ export default class App extends Component {
   }
 
   async componentWillMount() {
-    Authen.setup()
-    // await SecureDS.checkPincode()
     await MainStore.startApp()
   }
 
@@ -56,11 +51,8 @@ export default class App extends Component {
     }
     crashlytics.init()
     try {
-      await SettingStore.setupSecurityValue()
       SplashScreen.hide()
-
       await currencyStore.getCurrencyAPI()
-      await walletStore.getIsBackup()
     } catch (e) {
       NavStore.popupCustom.show(e.message)
       SplashScreen.hide()
