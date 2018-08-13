@@ -141,6 +141,7 @@ export default class SendTransactionScreen extends Component {
           style={styles.exit}
           onPress={() => {
             this.props.navigation.dispatch(NavigationActions.back())
+            MainStore.clearSendStore()
           }}
         >
           <Image style={styles.exitBtn} source={images.closeButton} resizeMode="contain" />

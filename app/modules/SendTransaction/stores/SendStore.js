@@ -1,4 +1,6 @@
 import { observable, action, computed } from 'mobx'
+import BigNumber from 'bignumber.js'
+import { NavigationActions } from 'react-navigation'
 import AmountStore from './AmountStore'
 import AddressInputStore from './AddressInputStore'
 import ConfirmStore from './ConfirmStore'
@@ -9,7 +11,8 @@ import MainStore from '../../../AppStores/MainStore'
 import constant from '../../../commons/constant'
 import NavStore from '../../../stores/NavStore'
 import SecureDS from '../../../AppStores/DataSource/SecureDS'
-import BigNumber from '../../../../node_modules/bignumber.js'
+import HapticHandler from '../../../Handler/HapticHandler'
+
 // import NavigationStore from '../../../navigation/NavigationStore'
 // import ScreenID from '../../../navigation/ScreenID'
 
@@ -54,7 +57,6 @@ class SendStore {
   }
 
   sendTx() {
-    console.log(this.confirmStore.value.toString(10))
     const transaction = {
       value: `${this.confirmStore.value.toString(10)}`,
       to: this.address,
@@ -76,14 +78,32 @@ class SendStore {
     // }, true)
     NavStore.lockScreen({
       onUnlock: (pincode) => {
+        NavStore.showLoading()
         const ds = new SecureDS(pincode)
         if (!this.isToken) {
-          this.sendETH(transaction, ds)
-        } else {
-          this.sendToken(transaction, ds)
+          return this.sendETH(transaction, ds)
+            .then(res => this._onSendSuccess(res))
+            .catch(err => this._onSendFail(err))
         }
+        return this.sendToken(transaction, ds)
+          .then(res => this._onSendSuccess(res))
+          .catch(err => this._onSendFail(err))
       }
     }, true)
+  }
+
+  _onSendSuccess = (res) => {
+    NavStore.hideLoading()
+    HapticHandler.NotificationSuccess()
+    NavStore.navigator.dispatch(NavigationActions.back())
+    NavStore.navigator.dispatch(NavigationActions.back())
+    MainStore.clearSendStore()
+    NavStore.popupCustom.show('Send success')
+  }
+
+  _onSendFail = (err) => {
+    NavStore.hideLoading()
+    NavStore.popupCustom.show(err.message)
   }
 
   sendETH(transaction, ds) {
@@ -107,7 +127,7 @@ class SendStore {
             // )
             // return resolve(txTempt)
             this.generatePendingTransaction(tx, transaction, this.isToken)
-            return resolve()
+            return resolve(tx)
           })
           .catch((err) => {
             return reject(err)
@@ -193,6 +213,7 @@ class SendStore {
     }
     console.log(pendingTransaction)
     selectedToken.generateNewUnspendtx(pendingTransaction)
+
   }
 }
 
