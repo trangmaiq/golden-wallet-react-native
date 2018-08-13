@@ -24,6 +24,10 @@ export default class AddressInputStore {
     this.address = address
   }
 
+  @action setAddressFromQrCode(result) {
+
+  }
+
   @action setDisableSend(bool) {
     this.disableSend = bool
   }
