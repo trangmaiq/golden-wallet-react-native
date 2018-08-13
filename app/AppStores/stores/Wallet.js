@@ -165,9 +165,9 @@ export default class Wallet {
     secureDS.savePrivateKey(this.address, privateKey)
   }
 
-  @action fetchingBalance(isRefresh = false) {
+  @action fetchingBalance(isRefresh = false, isBackground = false) {
     this.isRefresh = isRefresh
-    this.isFetchingBalance = !isRefresh
+    this.isFetchingBalance = !isRefresh && !isBackground
     api.fetchWalletInfo(this.address).then(async (res) => {
       const { data } = res.data
       const tokens = data.tokens.map(t => new WalletToken(t))

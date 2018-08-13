@@ -6,6 +6,7 @@ import WalletDS from './DataSource/WalletDS'
 import AppDS from './DataSource/AppDS'
 import Reactions from './Reactions'
 import AddressBookDS from './DataSource/AddressBookDS'
+import api from '../api'
 
 // const defaultAppData = {
 //   config: new Config('mainnet', Constants.INFURA_API_KEY),
@@ -19,6 +20,7 @@ import AddressBookDS from './DataSource/AddressBookDS'
 // }
 
 // Current app state
+
 class AppState {
   dataVersion = '1'
   @observable config = new Config('mainnet', Constants.INFURA_API_KEY)
@@ -33,9 +35,13 @@ class AppState {
   currentWalletIndex = 0
   @observable internetConnection = 'online' // online || offline
 
+  static TIME_INTERVAL = 15000
+
   constructor() {
     Reactions.auto.listenConfig(this)
     Reactions.auto.listenConnection(this)
+    this.startCheckBalanceJob()
+    this.getRateETHDollar()
   }
 
   @action setConfig = (cf) => { this.config = cf }
@@ -132,6 +138,23 @@ class AppState {
 
   save() {
     return AppDS.saveAppData(this.toJSON())
+  }
+
+  async startCheckBalanceJob() {
+    this.checkBalanceJobID = setTimeout(() => {
+      if (this.internetConnection === 'online') {
+        this.wallets.forEach(w => w.fetchingBalance(false, false))
+      }
+
+      this.startCheckBalanceJob()
+    }, AppState.TIME_INTERVAL)
+  }
+
+  @action async getRateETHDollar() {
+    setTimeout(async () => {
+      const rs = await api.fetchRateETHDollar()
+      this.rateETHDollar = new BigNumber(rs.data.RAW.ETH.USD.PRICE)
+    }, 100)
   }
 
   // for local storage: be careful with MobX observable
