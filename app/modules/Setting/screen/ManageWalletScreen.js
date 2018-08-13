@@ -7,7 +7,8 @@ import {
   StyleSheet,
   SafeAreaView,
   View,
-  Dimensions
+  Dimensions,
+  TouchableWithoutFeedback
 } from 'react-native'
 import PropsType from 'prop-types'
 import { observer } from 'mobx-react/native'
@@ -82,6 +83,11 @@ export default class ListWalletScreen extends Component {
         {
           text: 'Remove',
           onClick: async () => {
+            const { wallets, selectedWallet } = MainStore.appState
+            const index = wallets.indexOf(selectedWallet)
+            if (index === wallets.length - 1) {
+              MainStore.appState.setSelectedWallet(null)
+            }
             await this.selectedWallet.remove()
             MainStore.appState.syncWallets()
             NavStore.popupCustom.hide()
@@ -165,32 +171,34 @@ export default class ListWalletScreen extends Component {
   render() {
     const { navigation } = this.props
     return (
-      <SafeAreaView style={styles.container}>
-        <NavigationHeader
-          style={{ marginTop: 20 + marginTop }}
-          headerItem={{
-            title: 'Wallets',
-            icon: null,
-            button: images.backButton
-          }}
-          action={() => {
-            navigation.dispatch(NavigationActions.back())
-          }}
-        />
-        {this._renderContentView()}
-        <ActionSheetCustom ref={(ref) => { this.actionSheet = ref }} onCancel={this.onCancelAction}>
-          <TouchableOpacity onPress={this.onEdit}>
-            <View style={[styles.actionButton, { borderBottomWidth: 1, borderColor: AppStyle.borderLinesSetting }]}>
-              <Text style={[styles.actionText, { color: '#4A90E2' }]}>Edit Wallet Name</Text>
-            </View>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={this.onDelete}>
-            <View style={styles.actionButton}>
-              <Text style={[styles.actionText, { color: AppStyle.colorDown }]}>Remove Wallet</Text>
-            </View>
-          </TouchableOpacity>
-        </ActionSheetCustom>
-      </SafeAreaView >
+      <TouchableWithoutFeedback onPress={() => { this.actionSheet.hide() }}>
+        <SafeAreaView style={styles.container}>
+          <NavigationHeader
+            style={{ marginTop: 20 + marginTop }}
+            headerItem={{
+              title: 'Wallets',
+              icon: null,
+              button: images.backButton
+            }}
+            action={() => {
+              navigation.dispatch(NavigationActions.back())
+            }}
+          />
+          {this._renderContentView()}
+          <ActionSheetCustom ref={(ref) => { this.actionSheet = ref }} onCancel={this.onCancelAction}>
+            <TouchableOpacity onPress={this.onEdit}>
+              <View style={[styles.actionButton, { borderBottomWidth: 1, borderColor: AppStyle.borderLinesSetting }]}>
+                <Text style={[styles.actionText, { color: '#4A90E2' }]}>Edit Wallet Name</Text>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={this.onDelete}>
+              <View style={styles.actionButton}>
+                <Text style={[styles.actionText, { color: AppStyle.colorDown }]}>Remove Wallet</Text>
+              </View>
+            </TouchableOpacity>
+          </ActionSheetCustom>
+        </SafeAreaView >
+      </TouchableWithoutFeedback>
     )
   }
 }

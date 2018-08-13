@@ -165,6 +165,7 @@ class SendStore {
               gasLimit: transaction.gasLimit,
               gasPrice: transaction.gasPrice
             }
+
             wallet.sendTransaction(unspentTransaction).then((tx) => {
               this.generatePendingTransaction(tx, transaction, this.isToken)
               return resolve(tx)
@@ -211,9 +212,8 @@ class SendStore {
       gas: gasLimit,
       gasPrice
     }
-    console.log(pendingTransaction)
-    selectedToken.generateNewUnspendtx(pendingTransaction)
 
+    selectedToken.addUnspendTransaction(pendingTransaction)
   }
 }
 

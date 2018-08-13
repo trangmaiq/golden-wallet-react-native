@@ -52,12 +52,8 @@ class WalletDataSource {
 
   async deleteWallet(address) {
     const wallets = await this.getWallets()
-    const index = await this.getIndexAtAddress(address)
     const result = wallets.filter(w => w.address != address)
     MainStore.secureStorage.removePrivateKey(address)
-    if (index === wallets.length - 1) {
-      MainStore.appState.setSelectedWallet(null)
-    }
     return this.saveWallets(result)
   }
 }
