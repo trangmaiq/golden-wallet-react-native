@@ -25,6 +25,7 @@ import HapticHandler from '../../../Handler/HapticHandler'
 import Helper from '../../../commons/Helper'
 import commonStyle from '../../../commons/commonStyles'
 import MainStore from '../../../AppStores/MainStore'
+import HomePendingTransaction from './HomePendingTransaction'
 
 const { width, height } = Dimensions.get('window')
 const isSmallScreen = height < 569
@@ -135,11 +136,13 @@ export default class LargeCard extends Component {
       totalBalanceETH,
       totalBalanceDollar,
       isFetchingBalance,
-      isHideValue
+      isHideValue,
+      unspendTransactions
     } = wallet
 
     const isHide = isHideValue
     const backgroundCard = AppStyle.mode1
+    const numberOfPendingTransaction = unspendTransactions.length
 
     const actionButton = (<ActionButton
       buttonItem={{
@@ -195,6 +198,9 @@ export default class LargeCard extends Component {
               </TouchableWithoutFeedback>
             }
           </View>
+          {numberOfPendingTransaction > 0 &&
+            <HomePendingTransaction numberOfPending={numberOfPendingTransaction} style={styles.homePending} />
+          }
           <Image
             style={[
               styles.imgCard,
@@ -407,5 +413,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: isSmallScreen ? 15 : 26,
     paddingVertical: isSmallScreen ? 4 : 7,
     borderRadius: 16
+  },
+  homePending: {
+    alignSelf: 'flex-start',
+    marginLeft: 25,
+    marginTop: 10
   }
 })
