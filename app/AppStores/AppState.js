@@ -40,7 +40,7 @@ class AppState {
   constructor() {
     Reactions.auto.listenConfig(this)
     Reactions.auto.listenConnection(this)
-    this.startCheckBalanceJob()
+    // this.startCheckBalanceJob()
     this.getRateETHDollar()
   }
 
