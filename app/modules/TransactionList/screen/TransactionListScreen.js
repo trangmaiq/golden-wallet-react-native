@@ -106,7 +106,8 @@ export default class TransactionListScreen extends Component {
             borderTopLeftRadius: 10,
             borderTopRightRadius: 10,
             overflow: 'hidden',
-            height: height - marginTop - 68
+            height: height - marginTop - 68,
+            backgroundColor: AppStyle.backgroundColor
           }}
           position="bottom"
           swipeToClose

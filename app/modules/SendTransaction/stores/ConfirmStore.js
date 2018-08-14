@@ -1,12 +1,7 @@
 import { observable, action, computed } from 'mobx'
 import { BigNumber } from 'bignumber.js'
-import Starypto from '../../../../Libs/react-native-starypto'
-import { toBigNumber, fromEther } from '../../../wallet/ethereum/txUtils'
-import constant from '../../../commons/constant'
 import MainStore from '../../../AppStores/MainStore'
 import Helper from '../../../commons/Helper'
-
-const BN = require('bn.js')
 
 export default class ConfirmStore {
   @observable value = new BigNumber('0')
@@ -33,7 +28,8 @@ export default class ConfirmStore {
   }
 
   @action setGasPrice(gasPrice) {
-    const gasP = new BigNumber(Starypto.Units.parseUnits(`${gasPrice}`, 9)._bn.toString(10))
+    // const gasP = new BigNumber(Starypto.Units.parseUnits(`${gasPrice}`, 9)._bn.toString(10))
+    const gasP = new BigNumber(gasPrice).times(new BigNumber(1e+9))
     this.gasPrice = gasP
   }
 
@@ -58,7 +54,8 @@ export default class ConfirmStore {
   }
 
   @computed get formatedFee() {
-    const fee = Starypto.Units.formatUnits(`${this.gasLimit.times(this.gasPrice)}`, 18)
+    // const fee = Starypto.Units.formatUnits(`${this.gasLimit.times(this.gasPrice)}`, 18)
+    const fee = this.gasLimit.times(this.gasPrice).div(new BigNumber(1e+18))
     return `${fee} ETH ($${Helper.formatUSD(Number(fee) * this.rate)})`
   }
 
@@ -74,7 +71,8 @@ export default class ConfirmStore {
     return `$${Helper.formatUSD(amountDolar)}`
   }
   _onShowAdvance() {
-    const formatedGasPrice = Number(Starypto.Units.formatUnits(`${this.gasPrice}`, 9)).toFixed(0)
+    // const formatedGasPrice = Number(Starypto.Units.formatUnits(`${this.gasPrice}`, 9)).toFixed(0)
+    const formatedGasPrice = this.gasPrice.div(1e+9).toFixed(0)
 
     MainStore.sendTransaction.advanceStore.setGasLimit(this.gasLimit.toString(10))
     MainStore.sendTransaction.advanceStore.setGasPrice(formatedGasPrice)

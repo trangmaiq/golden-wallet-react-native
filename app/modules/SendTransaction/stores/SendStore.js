@@ -58,7 +58,7 @@ class SendStore {
 
   sendTx() {
     const transaction = {
-      value: `${this.confirmStore.value.toString(10)}`,
+      value: this.confirmStore.value,
       to: this.address,
       gasLimit: this.confirmStore.gasLimit.toNumber(),
       gasPrice: this.confirmStore.gasPrice.toNumber()
@@ -111,21 +111,13 @@ class SendStore {
       const err = { message: 'Not enough gas to send this transaction' }
       return Promise.reject(err)
     }
-    const valueFormat = transaction.value ? fromEther(transaction.value).toString(16) : transaction.value
-    const transactionSend = { ...transaction, value: `0x${toBigNumber(valueFormat).toString(16)}` }
+    const valueFormat = transaction.value ? transaction.value.times(new BigNumber(1e+18)).toString(16) : transaction.value
+    const transactionSend = { ...transaction, value: `0x${valueFormat}` }
     return new Promise((resolve, reject) => {
       this.getPrivateKey(ds).then((privateKey) => {
         const wallet = this.getWalletSendTransaction(privateKey)
         wallet.sendTransaction(transactionSend)
           .then((tx) => {
-            // selectedToken.generateNewUnspendtx(pendingTransaction)
-            // const txTempt = this.generatePendingTransaction(tx, { title: 'ETH' }, 18)
-
-            // TransactionStore.addPendingTransaction(
-            //   wallet.address.toLowerCase(),
-            //   txTempt
-            // )
-            // return resolve(txTempt)
             this.generatePendingTransaction(tx, transaction, this.isToken)
             return resolve(tx)
           })
@@ -148,15 +140,14 @@ class SendStore {
       to,
       value
     } = transaction
-    const valueSend = value
     return new Promise((resolve, reject) => {
       this.getPrivateKey(ds).then((privateKey) => {
         const wallet = this.getWalletSendTransaction(privateKey)
         Starypto.ContractUtils.parseContract(token.address)
           .then((contract) => {
             const numberOfDecimals = contract.tokenInfo.decimals
-            const numberOfTokens = Starypto.Units.parseUnits(`${valueSend}`, numberOfDecimals)
-
+            // const numberOfTokens = Starypto.Units.parseUnits(`${valueSend}`, numberOfDecimals)
+            const numberOfTokens = `0x${value.times(new BigNumber(`1e+${numberOfDecimals}`)).toString(16)}`
             const inf = new Starypto.Interface(contract.abi)
             const transfer = inf.functions.transfer(to, numberOfTokens)
             const unspentTransaction = {
@@ -170,18 +161,6 @@ class SendStore {
               this.generatePendingTransaction(tx, transaction, this.isToken)
               return resolve(tx)
             }).catch(err => reject(err))
-
-            // const ct = new Starypto.Contract(token.address, contract.abi, wallet)
-            // ct.transfer(to, numberOfTokens).then((tx) => {
-            //   // const txTempt = this.generatePendingTransaction(tx, token, contract.tokenInfo.decimals, transaction)
-            //   // TransactionStore.addPendingTransaction(
-            //   //   token.address,
-            //   //   txTempt
-            //   // )
-            //   return resolve(txTempt)
-            // }).catch((err) => {
-            //   return reject(err)
-            // })
           }).catch((err) => {
             return reject(err)
           })
