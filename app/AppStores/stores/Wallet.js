@@ -230,7 +230,8 @@ export default class Wallet {
           rate: MainStore.appState.rateETHDollar.toString(10)
         }
       },
-      balance: Starypto.Units.parseUnits(`${data.ETH.balance}`, 18)._bn.toString(10)
+      // balance: Starypto.Units.parseUnits(`${data.ETH.balance}`, 18)._bn.toString(10)
+      balance: new BigNumber(data.ETH.balance).times(new BigNumber(1e+18)).toString(10)
     }
 
     return new WalletToken(tokenETH)

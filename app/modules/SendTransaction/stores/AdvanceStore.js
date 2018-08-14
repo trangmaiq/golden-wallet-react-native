@@ -1,6 +1,6 @@
 import { observable, action, computed } from 'mobx'
+import BigNumber from 'bignumber.js'
 import MainStore from '../../../AppStores/MainStore'
-import Starypto from '../../../../Libs/react-native-starypto'
 
 export default class AdvanceStore {
   @observable gasLimit = ''
@@ -47,7 +47,8 @@ export default class AdvanceStore {
   }
 
   @computed get formatedTmpFee() {
-    const gasLimit = Number(Starypto.Units.formatUnits(`${this.gasLimit}`, 9))
+    // const gasLimit = Number(Starypto.Units.formatUnits(`${this.gasLimit}`, 9))
+    const gasLimit = new BigNumber(this.gasLimit).div(1e+9).toNumber()
     const gasPrice = Number(this.gasPrice)
     const fee = gasLimit * gasPrice
     return `${fee} ${this.title} ($${fee * this.rate})`
