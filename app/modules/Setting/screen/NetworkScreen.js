@@ -40,6 +40,7 @@ export default class NetworkScreen extends Component {
 
   onItemPress = (nw) => {
     MainStore.appState.setConfig(new Config(nw, constant.INFURA_API_KEY))
+    MainStore.appState.save()
     NavStore.goBack()
   }
 
