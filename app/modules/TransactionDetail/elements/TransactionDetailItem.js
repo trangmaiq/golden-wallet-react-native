@@ -29,27 +29,17 @@ export default class TransactionDetailItem extends Component {
     bottomLine: true
   }
 
-  render() {
-    const {
-      style,
-      data,
-      action,
-      bottomLine
-    } = this.props
+  get styleSubtitle() {
+    const { data } = this.props
 
     const {
-      title,
-      subtitle,
-      type,
-      isSelf
+      title, type, isSelf
     } = data
-
     let styleSubtitle = {
       fontSize: 14,
       fontFamily: Platform.OS === 'ios' ? 'OpenSans' : 'OpenSans-Regular',
       color: AppStyle.secondaryTextColor
     }
-
     if ((type === constant.SENT && title === 'Value') || isSelf) {
       styleSubtitle = {
         fontSize: 18,
@@ -63,6 +53,23 @@ export default class TransactionDetailItem extends Component {
         color: AppStyle.colorUp
       }
     }
+    return styleSubtitle
+  }
+
+  render() {
+    const {
+      style,
+      data,
+      action,
+      bottomLine
+    } = this.props
+
+    const {
+      title,
+      subtitle
+    } = data
+
+    const { styleSubtitle } = this
 
     return (
       <TouchableOpacity onPress={() => { action() }}>

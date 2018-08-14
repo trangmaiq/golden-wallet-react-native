@@ -26,6 +26,27 @@ export default class TransactionsItem extends Component {
     action: () => { }
   }
 
+  get colorBalance() {
+    const { transactionItem } = this.props
+    const { type, isSelf } = transactionItem
+    if (type === constant.SENT || isSelf) {
+      return { color: AppStyle.colorDown }
+    }
+    return { color: AppStyle.colorUp }
+  }
+
+  get operator() {
+    const { transactionItem } = this.props
+    const { type, isSelf } = transactionItem
+    if (type === constant.SENT) {
+      return '-'
+    }
+    if (isSelf) {
+      return ''
+    }
+    return '+'
+  }
+
   render() {
     const {
       style,
@@ -40,20 +61,10 @@ export default class TransactionsItem extends Component {
       balanceUSD,
       type,
       status,
-      tokenSymbol,
-      isSelf
+      tokenSymbol
     } = transactionItem
 
-    let colorBalance = type === constant.SENT
-      ? { color: AppStyle.colorDown }
-      : { color: AppStyle.colorUp }
-    let operator = type === constant.SENT
-      ? '-'
-      : '+'
-    if (isSelf) {
-      colorBalance = { color: AppStyle.colorDown }
-      operator = ''
-    }
+    const { colorBalance, operator } = this
     return (
       <TouchableWithoutFeedback onPress={() => { action() }}>
         <View style={[styles.container, style]}>

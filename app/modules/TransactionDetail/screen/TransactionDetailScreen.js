@@ -34,22 +34,31 @@ export default class TransactionDetailScreen extends Component {
     return MainStore.appState.selectedToken.selectedTransaction
   }
 
+  get operator() {
+    const { type, isSelf } = this.selectedTransaction
+    if (type == constant.SENT) {
+      return '-'
+    }
+    if (isSelf) {
+      return ''
+    }
+    return '+'
+  }
+
+  get value() {
+    const { tokenSymbol } = this.selectedTransaction
+    const { operator } = this
+    return `${operator} ${this.selectedTransaction.balance.toString(10)} ${tokenSymbol !== '' ? tokenSymbol : 'ETH'}`
+  }
+
   _onPress = (message) => {
     Clipboard.setString(message)
     NavStore.showToastTop('Copied', {}, { color: AppStyle.mainColor })
   }
 
   renderValue = () => {
-    const { tokenSymbol, type, isSelf } = this.selectedTransaction
-    let operator = type === constant.SENT
-      ? '-'
-      : '+'
-    if (isSelf) {
-      operator = ''
-    }
-    const value = `${operator} ${this.selectedTransaction.balance.toString(10)} ${tokenSymbol != ''
-      ? tokenSymbol
-      : 'ETH'}`
+    const { type, isSelf } = this.selectedTransaction
+    const { value } = this
     return (
       <TransactionDetailItem
         style={{ marginTop: 15 }}
