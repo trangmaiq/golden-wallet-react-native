@@ -14,7 +14,7 @@ import TransactionDetailItem from '../elements/TransactionDetailItem'
 import AppStyle from '../../../commons/AppStyle'
 import constant from '../../../commons/constant'
 import MainStore from '../../../AppStores/MainStore'
-import NavStore from '../../../stores/NavStore';
+import NavStore from '../../../stores/NavStore'
 
 const { width, height } = Dimensions.get('window')
 const isIPX = height === 812
@@ -34,26 +34,39 @@ export default class TransactionDetailScreen extends Component {
     return MainStore.appState.selectedToken.selectedTransaction
   }
 
+  get operator() {
+    const { type, isSelf } = this.selectedTransaction
+    if (type == constant.SENT) {
+      return '-'
+    }
+    if (isSelf) {
+      return ''
+    }
+    return '+'
+  }
+
+  get value() {
+    const { tokenSymbol } = this.selectedTransaction
+    const { operator } = this
+    return `${operator} ${this.selectedTransaction.balance.toString(10)} ${tokenSymbol !== '' ? tokenSymbol : 'ETH'}`
+  }
+
   _onPress = (message) => {
     Clipboard.setString(message)
     NavStore.showToastTop('Copied', {}, { color: AppStyle.mainColor })
   }
 
   renderValue = () => {
-    const { tokenSymbol, type } = this.selectedTransaction
-    const operator = type === constant.SENT
-      ? '-'
-      : '+'
-    const value = `${operator} ${this.selectedTransaction.balance.toString(10)} ${tokenSymbol != ''
-      ? tokenSymbol
-      : 'ETH'}`
+    const { type, isSelf } = this.selectedTransaction
+    const { value } = this
     return (
       <TransactionDetailItem
         style={{ marginTop: 15 }}
         data={{
           title: 'Value',
           subtitle: value,
-          type
+          type,
+          isSelf
         }}
         action={() => this._onPress(value)}
       />

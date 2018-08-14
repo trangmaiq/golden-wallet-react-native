@@ -11,6 +11,7 @@ export default {
   TOKEN: 'Token',
   ETHEREUM: 'Ethereum',
   PENDING: 'Pending',
+  SELF: 'Self',
   TITLE_SEND_SUCCESS: 'Your transfer is completed.',
   SUB_TITTLE_SEND_SUCCESS: 'The process may take up to some seconds. Please check your history for transaction status.',
   TEXT_VIEW_DETAIL: 'View Details',

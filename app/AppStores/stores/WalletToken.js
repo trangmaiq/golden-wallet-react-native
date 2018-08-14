@@ -136,7 +136,14 @@ export default class WalletToken {
     }
 
     API.fetchTransactions(this.address, data, this.txFetcherInfo.page).then((res) => {
-      const txArr = res.data.result.map(t => new Transaction(t, this))
+      let txArr = res.data.result.map(t => new Transaction(t, this)).reduce((_result, _tx) => {
+        const result = _result
+        const tx = _tx
+        tx.isSelf = !!result[tx.hash]
+        result[tx.hash] = tx
+        return result
+      }, {})
+      txArr = Object.keys(txArr).map(s => txArr[s])
       if (this.txFetcherInfo.page === 1) {
         this.transactions = txArr
       } else {
