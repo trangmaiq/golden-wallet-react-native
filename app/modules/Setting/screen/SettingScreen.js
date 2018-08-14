@@ -12,6 +12,7 @@ import SettingItem from '../elements/SettingItem'
 import SettingStore from '../SettingStore'
 import NavStore from '../../../stores/NavStore'
 import MainStore from '../../../AppStores/MainStore'
+import AppSetting from '../../Setting/elements/AppSetting'
 
 @observer
 export default class SettingScreen extends Component {
@@ -40,6 +41,10 @@ export default class SettingScreen extends Component {
     MainStore.gotoAddressBook()
     NavStore.pushToScreen('AddressBookScreen')
   }
+
+  onNetworkPress = () => NavStore.pushToScreen('NetworkScreen')
+
+  onNotificationSwitch = () => { }
 
   renderCommunity = () => (
     <FlatList
@@ -82,27 +87,13 @@ export default class SettingScreen extends Component {
   )
 
   renderAppSetting = () => (
-    <FlatList
-      style={{ flex: 1 }}
-      ListHeaderComponent={<Text style={styles.titleText}>App Setting</Text>}
-      data={this.settingStore.dataAppSetting}
-      keyExtractor={v => v.mainText}
-      scrollEnabled={false}
-      renderItem={({ item, index }) =>
-        (
-          <SettingItem
-            style={{ borderTopWidth: index === 0 ? 0 : 1 }}
-            mainText={item.mainText}
-            onPress={item.onPress}
-            iconRight={item.iconRight}
-            subText={item.subText}
-            type={item.type}
-            enableSwitch={item.enableSwitch}
-            onSwitch={_ => this.settingStore.onSwitchEnableNotification()}
-          />
-        )
-      }
-    />
+    <View>
+      <Text style={styles.titleText}>App Setting</Text>
+      <AppSetting
+        onNetworkPress={this.onNetworkPress}
+        onNotificationSwitch={this.onNotificationSwitch}
+      />
+    </View>
   )
 
   renderAbount = () => (

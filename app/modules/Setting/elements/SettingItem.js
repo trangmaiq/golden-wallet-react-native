@@ -20,7 +20,8 @@ export default class SettingItem extends PureComponent {
     onPress: PropTypes.func,
     type: PropTypes.string,
     onSwitch: PropTypes.func,
-    enableSwitch: PropTypes.bool
+    enableSwitch: PropTypes.bool,
+    disable: PropTypes.bool
   }
 
   static defaultProps = {
@@ -30,7 +31,8 @@ export default class SettingItem extends PureComponent {
     onPress: () => { },
     type: 'normal',
     onSwitch: () => { },
-    enableSwitch: false
+    enableSwitch: false,
+    disable: false
   }
 
   renderRightField = () => {
@@ -57,10 +59,10 @@ export default class SettingItem extends PureComponent {
 
   render() {
     const {
-      style, iconRight, mainText, onPress
+      style, iconRight, mainText, onPress, disable
     } = this.props
     return (
-      <TouchableOpacity onPress={onPress}>
+      <TouchableOpacity onPress={onPress} disabled={disable}>
         <View style={[styles.container, style]}>
           <Text style={styles.text}>{mainText}</Text>
           {iconRight && this.renderRightField()}

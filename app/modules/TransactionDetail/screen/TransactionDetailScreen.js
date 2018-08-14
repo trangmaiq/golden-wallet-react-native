@@ -4,7 +4,8 @@ import {
   StyleSheet,
   Dimensions,
   Text,
-  TouchableOpacity
+  TouchableOpacity,
+  Clipboard
 } from 'react-native'
 import PropTypes from 'prop-types'
 import NavigationHeader from '../../../components/elements/NavigationHeader'
@@ -13,6 +14,7 @@ import TransactionDetailItem from '../elements/TransactionDetailItem'
 import AppStyle from '../../../commons/AppStyle'
 import constant from '../../../commons/constant'
 import MainStore from '../../../AppStores/MainStore'
+import NavStore from '../../../stores/NavStore';
 
 const { width, height } = Dimensions.get('window')
 const isIPX = height === 812
@@ -32,17 +34,31 @@ export default class TransactionDetailScreen extends Component {
     return MainStore.appState.selectedToken.selectedTransaction
   }
 
-  renderValue = () =>
-    (
+  _onPress = (message) => {
+    Clipboard.setString(message)
+    NavStore.showToastTop('Copied', {}, { color: AppStyle.mainColor })
+  }
+
+  renderValue = () => {
+    const { tokenSymbol, type } = this.selectedTransaction
+    const operator = type === constant.SENT
+      ? '-'
+      : '+'
+    const value = `${operator} ${this.selectedTransaction.balance.toString(10)} ${tokenSymbol != ''
+      ? tokenSymbol
+      : 'ETH'}`
+    return (
       <TransactionDetailItem
         style={{ marginTop: 15 }}
         data={{
           title: 'Value',
-          subtitle: this.selectedTransaction.balance.toString(10),
-          type: this.selectedTransaction.type
+          subtitle: value,
+          type
         }}
+        action={() => this._onPress(value)}
       />
     )
+  }
 
   renderTime = () =>
     (
@@ -52,6 +68,7 @@ export default class TransactionDetailScreen extends Component {
           title: 'Time',
           subtitle: this.selectedTransaction.date
         }}
+        action={() => this._onPress(this.selectedTransaction.date)}
       />
     )
 
@@ -63,6 +80,7 @@ export default class TransactionDetailScreen extends Component {
           title: 'Transaction Hash',
           subtitle: this.selectedTransaction.hash
         }}
+        action={() => this._onPress(this.selectedTransaction.hash)}
       />
     )
 
@@ -77,6 +95,7 @@ export default class TransactionDetailScreen extends Component {
           title,
           subtitle
         }}
+        action={() => this._onPress(subtitle)}
       />
     )
   }
@@ -89,6 +108,7 @@ export default class TransactionDetailScreen extends Component {
           title: 'Fee',
           subtitle: this.selectedTransaction.fee.toString(10)
         }}
+        action={() => this._onPress(this.selectedTransaction.fee.toString(10))}
         bottomLine={false}
       />
     )

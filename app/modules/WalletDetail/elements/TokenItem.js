@@ -74,7 +74,7 @@ export default class TokenItem extends Component {
             position: 'absolute',
             opacity: imageNotFound ? 0 : 1
           }}
-          onProgress={() => this.setState({ imageNotFound: false })}
+          onLoad={() => this.setState({ imageNotFound: false })}
         />
       </View>
     )
