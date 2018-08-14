@@ -1,4 +1,4 @@
-import { observable, action, computed } from 'mobx'
+import { observable, action, computed, autorun } from 'mobx'
 import BigNumber from 'bignumber.js'
 import Config from './stores/Config'
 import Constants from '../commons/constant'
@@ -47,8 +47,8 @@ class AppState {
   @action setConfig = (cf) => { this.config = cf }
   @action setBackup = (isBackup) => { this.didBackup = isBackup }
   @action setSelectedWallet = (w) => { this.selectedWallet = w }
-  @action setselectedToken = (t) => { this.selectedToken = t }
   @action setInternetConnection = (ic) => { this.internetConnection = ic }
+  @action setselectedToken = (t) => { this.selectedToken = t }
 
   @action async syncWallets() {
     await WalletDS.getWallets().then((_wallets) => {
@@ -101,16 +101,11 @@ class AppState {
     this.currentWalletIndex = index
   }
 
-  @computed get isShowSendButton() {
-    const wallet = this.selectedWallet
-    if (!wallet) {
-      return false
-    }
-    return wallet.canSendTransaction
-  }
-
-  @computed get networkName() {
-    return this.config.network
+  @action async getRateETHDollar() {
+    setTimeout(async () => {
+      const rs = await api.fetchRateETHDollar()
+      this.rateETHDollar = new BigNumber(rs.data.RAW.ETH.USD.PRICE)
+    }, 100)
   }
 
   @action async import(orgData) {
@@ -136,6 +131,18 @@ class AppState {
     this.rateETHDollar = new BigNumber(data.rateETHDollar)
   }
 
+  @computed get isShowSendButton() {
+    const wallet = this.selectedWallet
+    if (!wallet) {
+      return false
+    }
+    return wallet.canSendTransaction
+  }
+
+  @computed get networkName() {
+    return this.config.network
+  }
+
   save() {
     return AppDS.saveAppData(this.toJSON())
   }
@@ -148,13 +155,6 @@ class AppState {
 
       this.startCheckBalanceJob()
     }, AppState.TIME_INTERVAL)
-  }
-
-  @action async getRateETHDollar() {
-    setTimeout(async () => {
-      const rs = await api.fetchRateETHDollar()
-      this.rateETHDollar = new BigNumber(rs.data.RAW.ETH.USD.PRICE)
-    }, 100)
   }
 
   // for local storage: be careful with MobX observable
