@@ -1,3 +1,4 @@
+import BigNumber from 'bignumber.js'
 import caller from './api-caller'
 import appState from '../AppStores/AppState'
 import NetworkConfig from '../AppStores/stores/Config'
@@ -8,6 +9,31 @@ import NetworkConfig from '../AppStores/stores/Config'
  */
 export const fetchWalletInfo = (address) => {
   if (!address) return Promise.reject()
+  if (appState.config.network !== NetworkConfig.networks.mainnet) {
+    const urlTest = `https://api-${appState.config.network}.etherscan.io/api`
+    const apikey = 'SVUJNQSR2APDFX89JJ1VKQU4TKMB6W756M'
+    const data = {
+      module: 'account',
+      action: 'balance',
+      address,
+      tag: 'latest',
+      apikey
+    }
+    return new Promise((resolve, reject) => {
+      caller.get(urlTest, data, true).then((res) => {
+        const result = {
+          data: {
+            data: {
+              ETH: { balance: new BigNumber(`${res.data.result}e-18`).toString(10) },
+              address,
+              tokens: []
+            }
+          }
+        }
+        resolve(result)
+      }).catch(e => reject(e))
+    })
+  }
   const url = `http://wallet.skylab.vn/balance/${address}`
   return caller.get(url, {}, true)
 }
