@@ -6,7 +6,7 @@ export default (appState) => {
     () => {
       if (appState.internetConnection === 'offline') return
       appState.wallets.forEach((w) => {
-        w.fetchingBalance(true)
+        w.fetchingBalance()
       })
     }
   )
