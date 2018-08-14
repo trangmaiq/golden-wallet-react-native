@@ -23,7 +23,9 @@ export default class WalletToken {
     hasMoreData: true
   }
 
-  constructor(obj) {
+  belongsToWalletAddress = null
+
+  constructor(obj, belongsToWalletAddress) {
     const { tokenInfo } = obj
     this.balance = new BigNumber(`${obj.balance}`)
     this.title = tokenInfo.name
@@ -31,6 +33,9 @@ export default class WalletToken {
     this.decimals = tokenInfo.decimals
     this.symbol = tokenInfo.symbol
     this.rate = tokenInfo.price ? new BigNumber(`${tokenInfo.price.rate}`) : new BigNumber(0)
+
+    // For identify
+    this.belongsToWalletAddress = belongsToWalletAddress
   }
 
   @action setSelectedTransaction = (tx) => { this.selectedTransaction = tx }

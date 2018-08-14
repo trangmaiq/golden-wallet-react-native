@@ -35,12 +35,12 @@ class AppState {
   currentWalletIndex = 0
   @observable internetConnection = 'online' // online || offline
 
-  static TIME_INTERVAL = 15000
+  static TIME_INTERVAL = 20000
 
   constructor() {
     Reactions.auto.listenConfig(this)
     Reactions.auto.listenConnection(this)
-    // this.startCheckBalanceJob()
+    this.startCheckBalanceJob()
     this.getRateETHDollar()
   }
 
