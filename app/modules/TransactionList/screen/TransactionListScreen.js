@@ -66,6 +66,7 @@ export default class TransactionListScreen extends Component {
 
   render() {
     const transactions = this.selectedToken.allTransactions
+    console.log(transactions)
     const { navigation } = this.props
     const { isRefreshing, isLoading } = this.selectedToken
 
