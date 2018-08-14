@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { View, Platform } from 'react-native'
 import { getStatusBarHeight } from 'react-native-status-bar-height'
-import ManageWalletItem from '../elements/ManageWalletItem'
+import ManageWalletItem from './../elements/ManageWalletItem'
 
 const marginTop = Platform.OS === 'ios' ? getStatusBarHeight() : 0
 const data = [

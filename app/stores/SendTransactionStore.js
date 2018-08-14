@@ -1,10 +1,10 @@
 import { observable, action } from 'mobx'
-import Starypto from '../../Libs/react-native-starypto'
+import Starypto from './../../Libs/react-native-starypto'
 import WalletStore from './WalletStore'
 import Helper from '../commons/Helper'
 import constant from '../commons/constant'
 import TransactionStore from './TransactionStore'
-import { toBigNumber, fromEther } from '../wallet/ethereum/txUtils'
+import { toBigNumber, fromEther } from './../wallet/ethereum/txUtils'
 
 class SendTransactionStore {
   @observable.ref selectedToken = null

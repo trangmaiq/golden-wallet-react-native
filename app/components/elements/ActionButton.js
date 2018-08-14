@@ -8,8 +8,8 @@ import {
   Dimensions
 } from 'react-native'
 import PropTypes from 'prop-types'
-import constant from '../../commons/constant'
-import images from '../../commons/images'
+import constant from './../../commons/constant'
+import images from './../../commons/images'
 
 const { height } = Dimensions.get('window')
 const isSmallScreen = height < 569

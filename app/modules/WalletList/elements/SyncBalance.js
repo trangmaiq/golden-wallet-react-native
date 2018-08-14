@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import {
-  View,
   Animated,
   Easing
 } from 'react-native'
@@ -36,32 +35,27 @@ export default class SyncBalance extends Component {
 
   render() {
     // const loading = WalletStore.isFetchingBalance
-    const loading = true
     const rotation = this.state.spinValue.interpolate({
       inputRange: [0, 2],
       outputRange: ['0deg', '360deg'],
       useNativeDriver: true
     })
     this.startAnimation()
-    if (loading) {
-      return (
-        <Animated.Image
-          style={[
-            {
-              borderColor: '#FBD249',
-              transform: [
-                {
-                  rotate: rotation
-                }
-              ]
-            }
-          ]}
-          source={images.iconSync}
-        />
-      )
-    }
+
     return (
-      <View />
+      <Animated.Image
+        style={[
+          {
+            borderColor: '#FBD249',
+            transform: [
+              {
+                rotate: rotation
+              }
+            ]
+          }
+        ]}
+        source={images.iconSync}
+      />
     )
   }
 }

@@ -9,10 +9,35 @@ import AppStyle from '../../commons/AppStyle'
 const { width, height } = Dimensions.get('window')
 
 export default class BlindScreen extends Component {
-  static navigatorStyle = {
-    navBarHidden: true
+  static propTypes = {
+
   }
+
+  static defaultProps = {
+
+  }
+
+  state = {
+    isShow: false
+  }
+
+  showBlind() {
+    this.setState({
+      isShow: true
+    })
+  }
+
+  hideBlind() {
+    this.setState({
+      isShow: false
+    })
+  }
+
   render() {
+    const { isShow } = this.state
+    if (!isShow) {
+      return <View />
+    }
     return (
       <View style={styles.container} />
     )

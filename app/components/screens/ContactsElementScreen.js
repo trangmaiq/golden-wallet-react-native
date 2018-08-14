@@ -8,19 +8,16 @@ import {
   Dimensions
 } from 'react-native'
 import PropsType from 'prop-types'
-import NavigationHeader from '../elements/NavigationHeader'
-import ManageWalletItem from '../elements/ManageWalletItem'
-import images from '../../commons/images'
-import appStyle from '../../commons/AppStyle'
+import NavigationHeader from './../elements/NavigationHeader'
+import ManageWalletItem from './../elements/ManageWalletItem'
+import images from './../../commons/images'
+import appStyle from './../../commons/AppStyle'
 import LayoutUtils from '../../commons/LayoutUtils'
 
 const { width } = Dimensions.get('window')
 const marginTop = LayoutUtils.getExtraTop()
 
 export default class ContactsElementScreen extends Component {
-  static navigatorStyle = {
-    navBarHidden: true
-  }
   static propTypes = {
     navigation: PropsType.object
   }

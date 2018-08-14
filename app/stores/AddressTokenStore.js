@@ -1,11 +1,10 @@
 import { observable, action, computed } from 'mobx'
 import CurrencyStore from './CurrencyStore'
 import Helper from '../commons/Helper'
-import API from '../api'
+import NavStore from './NavStore'
+import API from './../api'
 import NetworkStore from './NetworkStore'
 import Network from '../Network'
-// import TransactionStore from './TransactionStore'
-import NavigationStore from '../navigation/NavigationStore'
 
 class ObservableTokenStore {
   @observable tokenAddressMap = {}
@@ -81,16 +80,16 @@ class ObservableTokenStore {
       this.hideLoading()
       if (res.data.error) {
         if (res.data.error.code === 999) {
-          NavigationStore.showPopup('Server is going down to maintain, please try later!')
+          NavStore.popupCustom.show('Server is going down to maintain, please try later!')
           return null
         }
-        NavigationStore.showPopup(res.data.error.message)
+        NavStore.popupCustom.show(res.data.error.message)
         return null
       }
       return res.data.data
     }).catch((e) => {
       this.hideLoading()
-      NavigationStore.showPopup(e.message)
+      NavStore.popupCustom.show(e.message)
     })
   }
 

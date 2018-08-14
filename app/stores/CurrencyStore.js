@@ -22,7 +22,7 @@ class ObservableCurrencyStore {
       this.currencyETH = currency
       this.getCurrencyAPI()
       return this.currencyETH
-    }).catch(e => () => { })
+    })
   }
 
   @action getCurrencyAPI() {
@@ -30,7 +30,7 @@ class ObservableCurrencyStore {
       this.currencyETH = res.data.RAW.ETH
       this.saveCurrency(this.currencyETH)
       return this.currencyETH
-    }).catch(e => () => { })
+    })
   }
 
   @computed get currencyUSD() {

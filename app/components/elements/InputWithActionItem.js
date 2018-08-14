@@ -9,8 +9,8 @@ import {
   Clipboard
 } from 'react-native'
 import PropsTypes from 'prop-types'
-import images from '../../commons/images'
-import AppStyle from '../../commons/AppStyle'
+import images from './../../commons/images'
+import AppStyle from './../../commons/AppStyle'
 
 export default class SearchInput extends Component {
   static propTypes = {
@@ -28,8 +28,7 @@ export default class SearchInput extends Component {
     autoFocus: PropsTypes.bool,
     onFocus: PropsTypes.func,
     needPasteButton: PropsTypes.bool,
-    styleTextInput: PropsTypes.number,
-    delayFocus: PropsTypes.number
+    styleTextInput: PropsTypes.number
   }
 
   static defaultProps = {
@@ -47,17 +46,7 @@ export default class SearchInput extends Component {
     autoFocus: false,
     onFocus: () => { },
     needPasteButton: false,
-    styleTextInput: 0,
-    delayFocus: 0
-  }
-
-  componentDidMount() {
-    const { delayFocus } = this.props
-    if (delayFocus > 0) {
-      setTimeout(() => {
-        this.textInput.focus()
-      }, delayFocus)
-    }
+    styleTextInput: 0
   }
 
   onChangeText = (text) => {

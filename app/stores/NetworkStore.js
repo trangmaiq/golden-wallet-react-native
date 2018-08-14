@@ -16,10 +16,6 @@ class NetworkStore {
   @observable currentNetwork = Network.MainNet
   @observable switchingNetwork = false
 
-  getNetworkCapitalize() {
-    return this.currentNetwork.charAt(0).toUpperCase() + this.currentNetwork.slice(1)
-  }
-
   constructor() {
     this.getLocalNetworks()
   }

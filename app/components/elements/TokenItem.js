@@ -4,15 +4,16 @@ import {
   Text,
   Image,
   StyleSheet,
-  TouchableWithoutFeedback
+  TouchableOpacity,
+  Platform
 } from 'react-native'
 import PropsTypes from 'prop-types'
 import { observer } from 'mobx-react/native'
-import AppStyle from '../../commons/AppStyle'
-import images from '../../commons/images'
+import AppStyle from './../../commons/AppStyle'
+import images from './../../commons/images'
 import WalletStore from '../../stores/WalletStore'
 import Helper from '../../commons/Helper'
-import FadeText from './FadeText'
+import FadeText from '../elements/FadeText'
 
 @observer
 export default class TokenItem extends Component {
@@ -31,7 +32,7 @@ export default class TokenItem extends Component {
     title: null,
     subtitle: null,
     numberEther: null,
-    dollaEther: 0,
+    dollaEther: null,
     style: null,
     styleUp: null,
     onPress: () => { },
@@ -73,7 +74,7 @@ export default class TokenItem extends Component {
             position: 'absolute',
             opacity: imageNotFound ? 0 : 1
           }}
-          onLoad={() => this.setState({ imageNotFound: false })}
+          onProgress={() => this.setState({ imageNotFound: false })}
         />
       </View>
     )
@@ -91,9 +92,13 @@ export default class TokenItem extends Component {
       isSelectCoin
     } = this.props
 
-    const { enableSecretBalance } = WalletStore
+    const enableSecretBalance = WalletStore.dataCards[WalletStore.selectedIndex]
+      ? WalletStore.dataCards[WalletStore.selectedIndex].enableSecretBalance
+      : true
+    // const { enableSecretBalance = true } = WalletStore.dataCards[WalletStore.selectedIndex]
+
     return (
-      <TouchableWithoutFeedback onPress={onPress}>
+      <TouchableOpacity onPress={onPress}>
         <View style={[styles.container, style]}>
           <View style={[styles.viewUp, styleUp]}>
             {this._renderImageIcon(title, subtitle)}
@@ -135,7 +140,7 @@ export default class TokenItem extends Component {
             }
           </View>
         </View>
-      </TouchableWithoutFeedback>
+      </TouchableOpacity>
     )
   }
 }
@@ -175,7 +180,7 @@ const styles = StyleSheet.create({
   },
   subTitle: {
     marginTop: 3.5,
-    fontFamily: AppStyle.mainFont,
+    fontFamily: Platform.OS === 'ios' ? 'OpenSans' : 'OpenSans-Regular',
     fontSize: 14,
     color: AppStyle.secondaryTextColor
   },

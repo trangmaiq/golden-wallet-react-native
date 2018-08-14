@@ -9,14 +9,14 @@ import {
 } from 'react-native'
 import PropTypes from 'prop-types'
 import QRCode from 'react-native-qrcode'
-import NavigationHeader from '../elements/NavigationHeader'
+import NavigationHeader from './../elements/NavigationHeader'
 import constant from '../../commons/constant'
 import images from '../../commons/images'
 import AppStyle from '../../commons/AppStyle'
 import ActionButton from '../elements/ActionButton'
 import LayoutUtils from '../../commons/LayoutUtils'
 import commonStyle from '../../commons/commonStyles'
-import NavigationStore from '../../navigation/NavigationStore'
+import NavStore from '../../stores/NavStore'
 
 const { width, height } = Dimensions.get('window')
 const marginTop = LayoutUtils.getExtraTop()
@@ -25,10 +25,6 @@ const cardWidth = width - 72
 const cardHeight = height - 200 - marginTop
 
 export default class ReceiveScreen extends Component {
-  static navigatorStyle = {
-    navBarHidden: true
-  }
-
   static propTypes = {
     onClose: PropTypes.func,
     address: PropTypes.string.isRequired,
@@ -57,6 +53,44 @@ export default class ReceiveScreen extends Component {
           }}
           action={onClose}
         />
+        {/* <View
+          style={{
+            marginTop: popupHeight * 0.14,
+            paddingHorizontal: 50,
+            alignItems: 'center'
+          }}
+        >
+          <QRCode
+            value={address}
+            size={200}
+            bgColor="black"
+            fgColor="white"
+          />
+          <Text style={styles.name}>{name}</Text>
+          <Text
+            numberOfLines={2}
+            style={[styles.address, fontWeight]}
+          >
+            {address}
+          </Text>
+          <ActionButton
+            style={{
+              height: 32,
+              marginTop: 40
+            }}
+            buttonItem={{
+              name: constant.COPY,
+              icon: null,
+              background: 'backgroundWhite'
+            }}
+            action={() => {
+              Clipboard.setString(address)
+              Toast.showShortTop(`Copied`)
+            }}
+            styleText={{ color: AppStyle.backgroundBlue }}
+            styleIcon={{ tintColor: AppStyle.backgroundBlue }}
+          />
+        </View> */}
         <View style={[styles.cardStyle, { backgroundColor: 'white' }]}>
           <Image
             style={{
@@ -99,7 +133,7 @@ export default class ReceiveScreen extends Component {
             }
             action={() => {
               Clipboard.setString(address)
-              NavigationStore.showToast('Copied')
+              NavStore.showToastTop('Copied', {}, { color: AppStyle.mainColor })
             }}
             styleText={{ color: AppStyle.backgroundColor }}
           />

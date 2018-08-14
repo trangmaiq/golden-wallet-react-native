@@ -20,9 +20,6 @@ const { width, height } = Dimensions.get('window')
 const isIPX = height === 812
 
 export default class CreateSuccessScreen extends Component {
-  static navigatorStyle = {
-    navBarHidden: true
-  }
   static propTypes = {
     onSubButtonPress: PropTypes.func,
     onMainButtonPress: PropTypes.func

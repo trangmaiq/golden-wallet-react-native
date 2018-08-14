@@ -1,23 +1,27 @@
+import {
+  Platform
+  // AsyncStorage,
+  // AppState
+} from 'react-native'
 import FCM, {
-  FCMEvent
-  // RemoteNotificationResult,
-  // WillPresentNotificationResult,
-  // NotificationType
+  FCMEvent,
+  RemoteNotificationResult,
+  WillPresentNotificationResult,
+  NotificationType
+  // NotificationActionType,
+  // NotificationActionOption,
+  // NotificationCategoryOption
 } from 'react-native-fcm'
 import NotificationStore from './stores/NotificationStore'
-import NavigationStore from './navigation/NavigationStore'
-import ScreenID from './navigation/ScreenID'
 
 const NotificationListenter = {
   setupInitNotification: () => {
     FCM.getInitialNotification().then((notif) => {
       const {
         address,
-        contract,
-        wallet,
-        tx
+        token,
+        wallet
       } = notif
-
       if (!address) {
         NotificationStore.isInitFromNotification = false
         NotificationStore.transactionFromNotif = {}
@@ -25,38 +29,38 @@ const NotificationListenter = {
         NotificationStore.transactionFromNotif = {
           address,
           name: wallet,
-          addressToken: contract,
-          tx
+          addressToken: token
         }
         NotificationStore.isInitFromNotification = true
       }
-    }).catch(e => () => { })
+    })
   },
-
   registerKilledListener: () => {
-
+    // FCM.on(FCMEvent.Notification, (notif) => {
+    //   FCM.getBadgeNumber().then((badge) => {
+    //     FCM.setBadgeNumber(badge + 1)
+    //   }).catch(e => console.log(e))
+    // })
   },
-
-  registerAppListener: () => {
+  registerAppListener: (navigation) => {
     FCM.on(FCMEvent.Notification, (notif) => {
       const {
         address,
-        contract,
-        wallet,
-        tx
+        token,
+        wallet
       } = notif
-      if (!address) {
+      if (Platform.OS === 'ios' && notif._notificationType === NotificationType.WillPresent && !notif.local_notification) {
+        notif.finish(WillPresentNotificationResult.All)
         return
       }
 
       if (notif && notif.opened_from_tray) {
         setTimeout(() => {
           if (!NotificationStore.isInitFromNotification) {
-            NavigationStore.navigateTo(ScreenID.TransactionDetailScreen, {
+            navigation.push('TransactionDetailScreen', {
               address,
               name: wallet,
-              addressToken: contract,
-              tx
+              addressToken: token
             })
           } else {
             NotificationStore.isInitFromNotification = false
@@ -65,12 +69,19 @@ const NotificationListenter = {
         }, 500)
       }
 
-      if (NavigationStore.isShowNotif) {
-        // if (NavigationStore.currentScreen !== ScreenID.UnlockScreen) {
-        // if (!NotificationStore.isInitFromNotification) {
-        NavigationStore.showNotification(notif)
-        // }
-        // }
+      if (Platform.OS === 'ios') {
+        switch (notif._notificationType) {
+          case NotificationType.Remote:
+            notif.finish(RemoteNotificationResult.NewData)
+            break
+          case NotificationType.NotificationResponse:
+            notif.finish()
+            break
+          case NotificationType.WillPresent:
+            notif.finish(WillPresentNotificationResult.All)
+            break
+          default:
+        }
       }
     })
   }

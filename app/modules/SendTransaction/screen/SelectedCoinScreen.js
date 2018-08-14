@@ -1,45 +1,40 @@
 import React, { Component } from 'react'
 import {
   View,
-  FlatList
+  FlatList,
+  StyleSheet
 } from 'react-native'
-// import PropsType from 'prop-types'
 import { observer } from 'mobx-react/native'
-import TokenItem from '../../../components/elements/TokenItem'
+import TokenItem from '../elements/TokenItems'
 import NavigationHeader from '../../../components/elements/NavigationHeader'
 import images from '../../../commons/images'
-import AddressTokenStore from '../../../stores/AddressTokenStore'
 import Spinner from '../../../components/elements/Spinner'
-import WalletStore from '../../../stores/WalletStore'
-import Helper from '../../../commons/Helper'
-import sendTransactionStore from '../stores/SendTransactionStore'
-import CurrencyStore from '../../../stores/CurrencyStore'
+import MainStore from '../../../AppStores/MainStore'
 
 @observer
 export default class SelectedCoinScreen extends Component {
-  static navigatorStyle = {
-    navBarHidden: true
+  onItemPress = (index) => {
+    const { appState, sendTransaction } = MainStore
+    const amountText = {
+      data: [],
+      subData: [],
+      isUSD: false,
+      isHadPoint: false
+    }
+    appState.setselectedToken(this.wallet.tokens[index])
+    sendTransaction.changeIsToken(MainStore.appState.selectedToken.symbol !== 'ETH')
+    sendTransaction.amountStore.selectedCoinModal &&
+      sendTransaction.amountStore.selectedCoinModal.close()
+    sendTransaction.amountStore.setAmountText(amountText)
   }
 
-  static propTypes = {
-
-  }
-
-  static defaultProps = {
-
-  }
-
-  componentDidMount() {
-    const { address, balanceValue } = WalletStore.selectedWallet
-    AddressTokenStore.setupStore(address, balanceValue)
+  get wallet() {
+    return MainStore.appState.selectedWallet
   }
 
   render() {
-    const dataTokens = AddressTokenStore.getTokenAddress
-    const {
-      tokens = []
-    } = dataTokens
-    const loading = AddressTokenStore.isLoading
+    const { tokens } = this.wallet
+    const loading = false
     return (
       <View style={{ flex: 1, paddingTop: 26 }}>
         <NavigationHeader
@@ -50,52 +45,25 @@ export default class SelectedCoinScreen extends Component {
             button: images.closeButton
           }}
           action={() => {
-            sendTransactionStore.selectedModal && sendTransactionStore.selectedModal.close()
+            MainStore.sendTransaction.amountStore.selectedCoinModal &&
+              MainStore.sendTransaction.amountStore.selectedCoinModal.close()
           }}
         />
         <FlatList
           style={{ flex: 1, marginTop: 10 }}
           data={tokens}
           showsVerticalScrollIndicator={false}
-          keyExtractor={(item, index) => `${index}`}
+          keyExtractor={(item, index) => `${item.symbol}`}
           renderItem={({ item, index }) => {
             return (
               <View style={{ marginBottom: 20 }}>
                 <TokenItem
-                  style={{
-                    paddingTop: index === 0 ? 0 : 20,
-                    height: 72,
-                    marginTop: 0
-                  }}
+                  style={{ paddingTop: 0, height: 72, marginTop: 0 }}
                   styleUp={{ justifyContent: item.numberEther ? 'center' : 'flex-start', marginHorizontal: 20 }}
-                  title={item.title}
-                  subtitle={item.subtitle}
-                  iconEther={item.iconEther}
-                  randomColor={item.randomColor}
-                  numberEther={item.title == 'ETH' ? Helper.formatETH(item.balance) : Helper.formatCommaNumber(item.balance)}
-                  dollaEther={Helper.formatUSD(item.balanceUSD)}
-                  onPress={() => {
-                    sendTransactionStore.isSendToken = true
-                    const wallet = {
-                      address: WalletStore.selectedWallet.address,
-                      postfix: item.title,
-                      balanceCrypto: item.balance || 0,
-                      balanceUSD: item.balanceUSD || 0,
-                      ratio: (item.balanceUSD / (item.balance == 0 || item.balance == null) ? 1 : item.balance) === 0 ? CurrencyStore.currencyUSD : item.balanceUSD / item.balance
-                    }
-                    sendTransactionStore.setWallet(wallet)
-                    // Change coin to reset data
-                    sendTransactionStore.setNumberArray({
-                      data: [],
-                      subData: [],
-                      type: false,
-                      isHadPoint: false
-                    })
-                    sendTransactionStore.setToken(item)
-                    sendTransactionStore.selectedModal && sendTransactionStore.selectedModal.close()
-                  }}
+                  indexToken={index}
+                  onPress={() => this.onItemPress(index)}
                 />
-                <View style={{ height: 1, backgroundColor: '#14192D', marginHorizontal: 15 }} />
+                <View style={styles.lineStyle} />
               </View>)
           }}
         />
@@ -106,3 +74,11 @@ export default class SelectedCoinScreen extends Component {
     )
   }
 }
+
+const styles = StyleSheet.create({
+  lineStyle: {
+    height: 1,
+    backgroundColor: '#14192D',
+    marginHorizontal: 15
+  }
+})

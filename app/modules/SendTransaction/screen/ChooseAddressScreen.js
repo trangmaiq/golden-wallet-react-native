@@ -7,22 +7,17 @@ import {
 import PropTypes from 'prop-types'
 import NavigationHeader from '../../../components/elements/NavigationHeader'
 import images from '../../../commons/images'
-import sendStore from '../stores/SendTransactionStore'
 import AppStyle from '../../../commons/AppStyle'
 import AddressItem from '../elements/AddressItem'
 import ContactStore from '../../../stores/ContactStore'
+import MainStore from '../../../AppStores/MainStore'
 
 // const { width, height } = Dimensions.get('window')
 
 export default class ChooseAdressScreen extends PureComponent {
-  static navigatorStyle = {
-    navBarHidden: true
-  }
-
   static propTypes = {
     onSelectedAddress: PropTypes.func
   }
-
   static defaultProps = {
     onSelectedAddress: () => { }
   }
@@ -32,7 +27,7 @@ export default class ChooseAdressScreen extends PureComponent {
   }
   render() {
     const { onSelectedAddress } = this.props
-    const dataAddressBook = ContactStore.contacts.slice()
+    const dataAddressBook = MainStore.appState.addressBooks.slice()
     return (
       <View
         style={styles.container}
@@ -44,7 +39,8 @@ export default class ChooseAdressScreen extends PureComponent {
             button: images.closeButton
           }}
           action={() => {
-            sendStore.addressModal && sendStore.addressModal.close()
+            const { addressModal } = MainStore.sendTransaction.addressInputStore
+            addressModal && addressModal.close()
           }}
         />
         <FlatList
@@ -55,9 +51,10 @@ export default class ChooseAdressScreen extends PureComponent {
             <AddressItem
               onPress={() => {
                 onSelectedAddress(item.address)
-                sendStore.addressModal.close()
+                const { addressModal } = MainStore.sendTransaction.addressInputStore
+                addressModal && addressModal.close()
               }}
-              name={item.name}
+              name={item.title}
               address={item.address}
             />
           )}

@@ -8,10 +8,7 @@ const Permission = {
   Authorized: 'authorized',
   Denied: 'denied',
   Restricted: 'restricted',
-  Undetermined: 'undetermined',
-
-  camera: 'camera',
-  photo: 'photo'
+  Undetermined: 'undetermined'
 }
 
 export default Permission

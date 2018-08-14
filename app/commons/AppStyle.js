@@ -1,21 +1,4 @@
-import { Platform } from 'react-native'
-
 export default {
-  Color: {
-    background: '#0A0F24',
-    white: 'white',
-    gray: '#E5E5E5',
-    lineColor: '#14192D',
-    backgroundToast: '#212637',
-    alertColor: '#D0021B',
-    errorColor: '#D0021B',
-    silverColor: '#8A8D97',
-    blueActionColor: '#4A90E2'
-  },
-  Align: {
-    center: 'center',
-    flexEnd: 'flex-end'
-  },
   mainColor: '#E4BF43',
   grayColor: '#C5C1C1',
   greenColor: '#2ED573',
@@ -65,11 +48,9 @@ export default {
   backgroundDarkBlue: '#121734',
 
   mainFontBold: 'OpenSans-Bold',
-  mainFont: Platform.OS === 'ios' ? 'OpenSans' : 'OpenSans-Regular',
+  mainFont: 'OpenSans-Regular',
   mainFontSemiBold: 'OpenSans-Semibold',
 
   swipeButtonBackground: '#1F2437',
-  borderLinesSetting: '#1D2137',
-
-  center: 'center'
+  borderLinesSetting: '#1D2137'
 }

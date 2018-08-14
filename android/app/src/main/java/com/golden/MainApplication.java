@@ -30,48 +30,50 @@ import com.facebook.soloader.SoLoader;
 import java.util.Arrays;
 import java.util.List;
 
-import com.reactnativenavigation.NavigationApplication;
+public class MainApplication extends Application implements ReactApplication {
 
-public class MainApplication extends NavigationApplication {
-  public boolean isDebug() {
-    // Make sure you are using BuildConfig from your own application
-    return BuildConfig.DEBUG;
-  }
+    private final ReactNativeHost mReactNativeHost = new ReactNativeHost(this) {
+        @Override
+        public boolean getUseDeveloperSupport() {
+            return BuildConfig.DEBUG;
+        }
 
-  @Override
-  public List<ReactPackage> createAdditionalReactPackages() {
-    return getPackages();
-  }
+        @Override
+        protected List<ReactPackage> getPackages() {
+            return Arrays.<ReactPackage>asList(
+                    new MainReactPackage(),
+                    new RNShimmerPackage(),
+                    new FingerprintAuthPackage(),
+                    new SplashScreenReactPackage(),
+                    new RandomBytesPackage(),
+                    new KeychainPackage(),
+                    new ImagePickerPackage(),
+                    new RNReactNativeHapticFeedbackPackage(),
+                    new RNFSPackage(),
+                    new FIRMessagingPackage(),
+                    new FabricPackage(),
+                    new RNDeviceInfo(),
+                    new RNCameraPackage(),
+                    new RCTQRCodeLocalImagePackage(),
+                    new RNGoldenKeystorePackage(),
+                    new RNGoldenLoadingPackage()
+            );
+        }
 
-  protected List<ReactPackage> getPackages() {
-    return Arrays.<ReactPackage>asList(
-      new MainReactPackage(),
-      new RNShimmerPackage(),
-      new FingerprintAuthPackage(),
-      new SplashScreenReactPackage(),
-      new RandomBytesPackage(),
-      new KeychainPackage(),
-      new ImagePickerPackage(),
-      new RNReactNativeHapticFeedbackPackage(),
-      new RNFSPackage(),
-      new FIRMessagingPackage(),
-      new FabricPackage(),
-      new RNDeviceInfo(),
-      new RNCameraPackage(), 
-      new RNGoldenKeystorePackage(),
-      new RCTQRCodeLocalImagePackage(),
-      new RNGoldenLoadingPackage()
-    );
-  }
+        @Override
+        protected String getJSMainModuleName() {
+            return "index";
+        }
+    };
 
-  @Override
-  public String getJSMainModuleName() {
-    return "index";
-  }
+    @Override
+    public ReactNativeHost getReactNativeHost() {
+        return mReactNativeHost;
+    }
 
-  @Override
-  public void onCreate() {
-    super.onCreate();
-    SoLoader.init(this, /* native exopackage */ false);
-  }
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        SoLoader.init(this, /* native exopackage */ false);
+    }
 }

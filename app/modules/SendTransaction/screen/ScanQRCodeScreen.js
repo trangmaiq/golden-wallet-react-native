@@ -20,23 +20,21 @@ import images from '../../../commons/images'
 import constant from '../../../commons/constant'
 import AppStyle from '../../../commons/AppStyle'
 import HapticHandler from '../../../Handler/HapticHandler'
-import sendStore from '../stores/SendTransactionStore'
-import NavigationStore from '../../../navigation/NavigationStore'
+import NavStore from '../../../stores/NavStore'
+import MainStore from '../../../AppStores/MainStore'
 
 const { width } = Dimensions.get('window')
 const widthButton = (width - 60) / 2
 
 @observer
 export default class ScanQRCodeScreen extends Component {
-  static navigatorStyle = {
-    navBarHidden: true
-  }
-
   static propTypes = {
+    navigation: PropTypes.object,
     onCompleted: PropTypes.func
   }
 
   static defaultProps = {
+    navigation: null,
     onCompleted: () => { }
   }
 
@@ -71,10 +69,12 @@ export default class ScanQRCodeScreen extends Component {
     // this.props.navigation.state.params.returnData(data)
     // this.props.navigation.goBack()
     this.props.onCompleted(data)
+    const { qrCodeModal } = MainStore.sendTransaction.addressInputStore
+    qrCodeModal && qrCodeModal.close()
   }
 
   onError = (data) => {
-    NavigationStore.showPopup(data)
+    NavStore.popupCustom.show(data)
   }
 
   async onPasteAddress() {
@@ -82,45 +82,54 @@ export default class ScanQRCodeScreen extends Component {
     if (address) {
       // this.props.navigation.state.params.returnData(address)
       // this.props.navigation.goBack()
+      this.props.onCompleted(address)
+      const { qrCodeModal } = MainStore.sendTransaction.addressInputStore
+      qrCodeModal && qrCodeModal.close()
     } else {
-      NavigationStore.showPopup('No Address Copied')
+      NavStore.popupCustom.show('No Address Copied')
     }
   }
 
   showPopupPermissionCamera() {
-    NavigationStore.showBinaryPopup(
+    NavStore.popupCustom.show(
       'Camera Access',
-      {
-        firstAction: {
-          title: 'Cancel',
-          action: () => { }
+      [
+        {
+          text: 'Cancel',
+          onClick: () => {
+            NavStore.popupCustom.hide()
+          }
         },
-        secondAction: {
-          title: 'Settings',
-          action: () => {
+        {
+          text: 'Settings',
+          onClick: () => {
             Permissions.openSettings()
+            NavStore.popupCustom.hide()
           }
         }
-      },
+      ],
       '"Golden" needs permission to access your device’s camera to scan QRCode. Please go to Setting > Golden > Turn on Camera'
     )
   }
 
   showPopupPermissionPhoto() {
-    NavigationStore.showBinaryPopup(
+    NavStore.popupCustom.show(
       'Photo Access',
-      {
-        firstAction: {
-          title: 'Not Now',
-          action: () => { }
+      [
+        {
+          text: 'Not Now',
+          onClick: () => {
+            NavStore.popupCustom.hide()
+          }
         },
-        secondAction: {
-          title: 'Settings',
-          action: () => {
+        {
+          text: 'Settings',
+          onClick: () => {
             Permissions.openSettings()
+            NavStore.popupCustom.hide()
           }
         }
-      },
+      ],
       '"Golden" needs permission to access your photo library to select a photo. Please go to Setting > Golden > Photo > choose Read and Write'
     )
   }
@@ -134,9 +143,10 @@ export default class ScanQRCodeScreen extends Component {
           this.props.onCompleted(result.toLowerCase())
           this.setState({ showCamera: false })
           // this.props.navigation.goBack()
-          sendStore.qrCodeModal && sendStore.qrCodeModal.close()
+          const { qrCodeModal } = MainStore.sendTransaction.addressInputStore
+          qrCodeModal && qrCodeModal.close()
         } else {
-          NavigationStore.showPopup('Can’t detect this code')
+          NavStore.popupCustom.show('Can’t detect this code')
         }
       })
     }
@@ -163,7 +173,7 @@ export default class ScanQRCodeScreen extends Component {
           }
         })
       }
-    }).catch(e => () => { })
+    })
   }
 
   _handleBarCodeRead(e) {
@@ -171,9 +181,10 @@ export default class ScanQRCodeScreen extends Component {
       HapticHandler.NotificationSuccess()
       // this.props.navigation.goBack()
       // this.props.navigation.state.params.returnData(e.data.toLowerCase())
-      sendStore.qrCodeModal && sendStore.qrCodeModal.close()
       this.props.onCompleted(e.data.toLowerCase())
       this.setState({ showCamera: false })
+      const { qrCodeModal } = MainStore.sendTransaction.addressInputStore
+      qrCodeModal && qrCodeModal.close()
     }
   }
 
@@ -212,7 +223,8 @@ export default class ScanQRCodeScreen extends Component {
             button: images.closeButton
           }}
           action={() => {
-            sendStore.qrCodeModal && sendStore.qrCodeModal.close()
+            const { qrCodeModal } = MainStore.sendTransaction.addressInputStore
+            qrCodeModal && qrCodeModal.close()
           }}
         />
         <View

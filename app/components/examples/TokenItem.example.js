@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { FlatList } from 'react-native'
-import TokenItem from '../elements/TokenItem'
+import TokenItem from './../elements/TokenItem'
 
 export default class TokenItemExam extends Component {
   render() {

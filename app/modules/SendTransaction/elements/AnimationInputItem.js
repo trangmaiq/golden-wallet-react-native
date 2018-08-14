@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
-import { Animated, Text, Dimensions } from 'react-native'
+import { Animated, Text, Dimensions, StyleSheet } from 'react-native'
 import PropTypes from 'prop-types'
-import AppStyle from '../../../commons/AppStyle';
+import AppStyle from '../../../commons/AppStyle'
 
 const { width, height } = Dimensions.get('window')
 const isSmallScreen = height < 569
@@ -16,7 +16,8 @@ export default class AnimationInputItem extends Component {
   static defaultProps = {
     animated: false,
     text: '',
-    sub: false
+    sub: false,
+    sizeSmall: false
   }
 
   constructor(props) {
@@ -90,8 +91,14 @@ export default class AnimationInputItem extends Component {
           }
         ]}
       >
-        <Text style={{ color: sub ? AppStyle.greyTextInput : 'white', fontSize: sizeSmall ? 40 : 60 }}>{text}</Text>
+        <Text style={[styles.inputStyle, { color: sub ? AppStyle.greyTextInput : 'white', fontSize: sizeSmall ? 40 : 60 }]}>{text}</Text>
       </Animated.View>
     )
   }
 }
+
+const styles = StyleSheet.create({
+  inputStyle: {
+    fontFamily: 'OpenSans-Semibold'
+  }
+})

@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { View, Dimensions } from 'react-native'
-import TagList from '../elements/TagList'
+import TagList from './../../components/elements/TagList'
 import PropTypes from 'prop-types'
 
 const { width } = Dimensions.get('window')

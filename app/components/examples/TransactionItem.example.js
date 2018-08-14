@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import { View, Platform } from 'react-native'
 import { getStatusBarHeight } from 'react-native-status-bar-height'
-import TransactionItem from '../elements/TransactionsItem'
-import constant from '../../commons/constant'
+import TransactionItem from './../elements/TransactionsItem'
+import constant from './../../commons/constant'
 
 const marginTop = Platform.OS === 'ios' ? getStatusBarHeight() : 0
 const data = [

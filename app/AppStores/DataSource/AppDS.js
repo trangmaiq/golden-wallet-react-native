@@ -1,4 +1,5 @@
 import { AsyncStorage } from 'react-native'
+import AppState from '../AppState'
 
 const dataKey = 'APP_STORAGE'
 
@@ -16,7 +17,10 @@ const dataKey = 'APP_STORAGE'
 class AppDataSource {
   async readAppData() {
     const dataString = await AsyncStorage.getItem(dataKey)
-    return dataString ? JSON.parse(dataString) : null
+    if (!dataString) return AppState
+    const data = JSON.parse(dataString)
+    await AppState.import(data)
+    return AppState
   }
 
   async saveAppData(data) {

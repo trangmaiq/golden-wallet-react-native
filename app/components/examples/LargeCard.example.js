@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { View, Platform, ScrollView } from 'react-native'
 import { getStatusBarHeight } from 'react-native-status-bar-height'
-import LargeCard from '../elements/LargeCard'
+import LargeCard from './../elements/LargeCard'
 
 const marginTop = Platform.OS === 'ios' ? getStatusBarHeight() : 0
 const data = [

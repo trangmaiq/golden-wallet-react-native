@@ -1,16 +1,14 @@
 import React, { Component } from 'react'
-import { StyleSheet } from 'react-native'
+import {
+  StyleSheet
+} from 'react-native'
 
 import DWebBrowser from '../../../Libs/react-native-golden-dweb-browser'
 import walletStore from '../../stores/WalletStore'
-// import navStore from '../../stores/NavStore'
+import navStore from '../../stores/NavStore'
 import sendTxStore from '../../stores/SendTransactionStore'
 
 export default class DWebBrowserScreen extends Component {
-  static navigatorStyle = {
-    navBarHidden: true
-  }
-
   onSignTransaction(data) {
     sendTxStore.setupStore({
       type: 'signTxRequest',
@@ -23,7 +21,7 @@ export default class DWebBrowserScreen extends Component {
       this.webview.executeCallback(data.id, error, signedTx)
     }
 
-    // navStore.openModal()
+    navStore.openModal()
   }
 
   render() {

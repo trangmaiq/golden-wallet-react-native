@@ -2,14 +2,12 @@ import { observable, action, computed } from 'mobx'
 import { Linking, Platform, Alert, AsyncStorage } from 'react-native'
 import * as StoreReview from 'react-native-store-review'
 import constant from '../commons/constant'
-import NavigationStore from '../navigation/NavigationStore'
-import ScreenID from '../navigation/ScreenID'
 
 const store = Platform.OS === 'ios' ? 'App Store' : 'Google Play'
 const PLAY_STORE_LINK = 'market://details?id=app.starfish'
 
 class ObservableSettingStore {
-  // @observable.ref navigator = null
+  @observable.ref navigator = null
   @observable.ref dataWallets = []
   @observable.ref isShowSmallBalance = true
   @observable.ref isSecuritySendTransaction = null
@@ -30,12 +28,23 @@ class ObservableSettingStore {
     {
       title: 'Privacy Policy',
       onPress: () => {
-        NavigationStore.navigateTo(ScreenID.PrivacyPolicyWebView)
+        this.navigator && this.navigator.navigate('PrivacyPolicyWebView')
       }
     }
+    // {
+    //   title: 'DApp Browser',
+    //   onPress: () => {
+    //     this.navigator && this.navigator.navigate('DWebBrowserScreen')
+    //   }
+    // }
   ]
 
   @observable settingSecurity = [
+    // {
+    //   saveID: 'SECURITY_PINCODE_UNLOCK',
+    //   title: 'Touch ID',
+    //   value: false
+    // },
     {
       saveID: 'SECURITY_FACEID_SEND_TRANSACTION',
       title: 'Require PIN to send',

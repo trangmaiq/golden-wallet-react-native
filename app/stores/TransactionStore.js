@@ -2,9 +2,9 @@ import { observable, action } from 'mobx'
 import constant from '../commons/constant'
 import CurrencyStore from './CurrencyStore'
 import Helper from '../commons/Helper'
+import NavStore from './NavStore'
 import AddressTokenStore from './AddressTokenStore'
-import API from '../api'
-import NavigationStore from '../navigation/NavigationStore'
+import API from './../api'
 
 class ObservableTransactionStore {
   @observable transactionMap = {}
@@ -80,15 +80,14 @@ class ObservableTransactionStore {
     if (!isLoadMore) {
       return null
     }
-
     return API.fetchTransactions(addressStr, data, page).then((res) => {
       this.isRefreshing = false
       if (res.data.error) {
-        NavigationStore.showPopup(res.data.error.message)
+        NavStore.popupCustom.show(res.data.error.message)
         return null
       }
       const listTransactions = res.data.result
-      isLoadMore = listTransactions ? listTransactions.length > 0 : false
+      isLoadMore = listTransactions.length > 0
 
       let txs = listTransactions.slice().map((t) => {
         const transaction = t
@@ -104,9 +103,7 @@ class ObservableTransactionStore {
       }, {})
 
       txs = Object.keys(txs).map(s => txs[s])
-
       let totalTx = [...txData, ...txs]
-
       if (page === 1 && pendingTransactions && pendingTransactions.length > 0) {
         totalTx = [...pendingTransactions, ...totalTx]
       }
@@ -122,7 +119,7 @@ class ObservableTransactionStore {
         }
       }
       return this.transactionMap
-    }).catch((e) => {
+    }).catch((err) => {
       this.isRefreshing = false
       this.transactionMap = {
         ...this.transactionMap,
@@ -132,7 +129,7 @@ class ObservableTransactionStore {
           page
         }
       }
-      // NavigationStore.showPopup(err.message)
+      NavStore.popupCustom.show(err.message)
     })
   }
 
@@ -144,8 +141,7 @@ class ObservableTransactionStore {
       return null
     }
     const transactionsFormated = txData.map((transaction, index) => {
-      let { tokenSymbol } = transaction
-      const { tokenDecimal } = transaction
+      let { tokenDecimal, tokenSymbol } = transaction
       let priceUSD = AddressTokenStore.tokenPrice[tokenSymbol || 'ETH']
       if (transaction.tokenInfo && transaction.tokenInfo.name !== '') {
         tokenSymbol = transaction.tokenInfo.symbol
