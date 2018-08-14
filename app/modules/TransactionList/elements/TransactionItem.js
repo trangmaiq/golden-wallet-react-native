@@ -39,13 +39,16 @@ export default class TransactionsItem extends Component {
       date,
       balanceUSD,
       type,
-      status
+      status,
+      tokenSymbol
     } = transactionItem
 
     const colorBalance = type === constant.SENT
       ? { color: AppStyle.colorDown }
       : { color: AppStyle.colorUp }
-
+    const operator = type === constant.SENT
+      ? '-'
+      : '+'
     return (
       <TouchableWithoutFeedback onPress={() => { action() }}>
         <View style={[styles.container, style]}>
@@ -59,11 +62,13 @@ export default class TransactionsItem extends Component {
               <Text style={styles.type}>{type}</Text>
               {status === 0 && <PendingTransaction style={{ marginLeft: 4 }} />}
             </View>
-            <Text style={[styles.balance, colorBalance]}>{Helper.formatETH(balance.toString(10))}</Text>
+            <Text style={[styles.balance, colorBalance]}>
+              {`${operator} ${Helper.formatETH(balance.toString(10))} ${tokenSymbol != '' ? tokenSymbol : 'ETH'}`}
+            </Text>
           </View>
           <View style={[styles.rowStyle, { marginTop: 5 }]}>
             <Text style={styles.date}>{date}</Text>
-            <Text style={styles.balanceUSD}>{Helper.formatUSD(balanceUSD.toString(10))}</Text>
+            <Text style={styles.balanceUSD}>{`$${Helper.formatUSD(balanceUSD.toString(10))}`}</Text>
           </View>
         </View>
       </TouchableWithoutFeedback>
