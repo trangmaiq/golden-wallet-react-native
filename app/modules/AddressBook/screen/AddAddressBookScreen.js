@@ -29,7 +29,7 @@ const marginTop = LayoutUtils.getExtraTop()
 const { height } = Dimensions.get('window')
 
 @observer
-export default class AddContactScreen extends Component {
+export default class AddAddressBookScreen extends Component {
   static propTypes = {
     navigation: PropsType.object
   }
@@ -100,7 +100,7 @@ export default class AddContactScreen extends Component {
       setTimeout(() => this.nameField.focus(), 250)
     }
     let address = codeScanned
-    if (this.importAddressStore.title === '') {
+    if (this.addressBookStore.title === '') {
       setTimeout(() => this.nameField.focus(), 250)
     }
     const resChecker = Checker.checkAddress(codeScanned)
