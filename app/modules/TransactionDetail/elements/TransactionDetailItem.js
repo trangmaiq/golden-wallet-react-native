@@ -40,7 +40,8 @@ export default class TransactionDetailItem extends Component {
     const {
       title,
       subtitle,
-      type
+      type,
+      isSelf
     } = data
 
     let styleSubtitle = {
@@ -49,15 +50,13 @@ export default class TransactionDetailItem extends Component {
       color: AppStyle.secondaryTextColor
     }
 
-    if (type === constant.SENT && title === 'Value') {
+    if ((type === constant.SENT && title === 'Value') || isSelf) {
       styleSubtitle = {
         fontSize: 18,
         fontFamily: 'OpenSans-Semibold',
         color: AppStyle.colorDown
       }
-    }
-
-    if (type === constant.RECEIVED && title === 'Value') {
+    } else if (type === constant.RECEIVED && title === 'Value') {
       styleSubtitle = {
         fontSize: 18,
         fontFamily: 'OpenSans-Semibold',

@@ -14,7 +14,7 @@ import TransactionDetailItem from '../elements/TransactionDetailItem'
 import AppStyle from '../../../commons/AppStyle'
 import constant from '../../../commons/constant'
 import MainStore from '../../../AppStores/MainStore'
-import NavStore from '../../../stores/NavStore';
+import NavStore from '../../../stores/NavStore'
 
 const { width, height } = Dimensions.get('window')
 const isIPX = height === 812
@@ -40,10 +40,13 @@ export default class TransactionDetailScreen extends Component {
   }
 
   renderValue = () => {
-    const { tokenSymbol, type } = this.selectedTransaction
-    const operator = type === constant.SENT
+    const { tokenSymbol, type, isSelf } = this.selectedTransaction
+    let operator = type === constant.SENT
       ? '-'
       : '+'
+    if (isSelf) {
+      operator = ''
+    }
     const value = `${operator} ${this.selectedTransaction.balance.toString(10)} ${tokenSymbol != ''
       ? tokenSymbol
       : 'ETH'}`
@@ -53,7 +56,8 @@ export default class TransactionDetailScreen extends Component {
         data={{
           title: 'Value',
           subtitle: value,
-          type
+          type,
+          isSelf
         }}
         action={() => this._onPress(value)}
       />

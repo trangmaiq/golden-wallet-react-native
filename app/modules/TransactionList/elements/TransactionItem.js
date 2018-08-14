@@ -40,15 +40,20 @@ export default class TransactionsItem extends Component {
       balanceUSD,
       type,
       status,
-      tokenSymbol
+      tokenSymbol,
+      isSelf
     } = transactionItem
 
-    const colorBalance = type === constant.SENT
+    let colorBalance = type === constant.SENT
       ? { color: AppStyle.colorDown }
       : { color: AppStyle.colorUp }
-    const operator = type === constant.SENT
+    let operator = type === constant.SENT
       ? '-'
       : '+'
+    if (isSelf) {
+      colorBalance = { color: AppStyle.colorDown }
+      operator = ''
+    }
     return (
       <TouchableWithoutFeedback onPress={() => { action() }}>
         <View style={[styles.container, style]}>
