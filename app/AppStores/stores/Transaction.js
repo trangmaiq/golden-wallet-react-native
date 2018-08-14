@@ -25,6 +25,7 @@ const defaultData = {
   cumulativeGasUsed: '0',
   input: '0x00',
   confirmations: '97923',
+  isSelf: false,
   status: 1 // not in API (0:pending | 1:success | 2:not_send)
 }
 
@@ -74,6 +75,7 @@ export default class Transaction {
   }
 
   get type() {
+    if (this.isSelf) return constant.SELF
     if (this.status === 0) return constant.PENDING
     return this.isSent ? constant.SENT : constant.RECEIVED
   }
