@@ -64,6 +64,7 @@ export default class Helper {
       }
       if (decimal.length > 4) {
         decimal = decimal.substring(0, 4)
+        decimal = this.removeRedundantZeros(decimal)
       }
       const result = `${this.numberWithCommas(integer)}.${decimal}`
       return decimal == 0 ? `${this.numberWithCommas(integer)}` : result
@@ -84,6 +85,7 @@ export default class Helper {
       }
       if (decimal.length > 2) {
         decimal = decimal.substring(0, 2)
+        decimal = this.removeRedundantZeros(decimal)
       }
       const result = `${this.numberWithCommas(integer)}.${decimal}`
       return decimal == 0 ? `${this.numberWithCommas(integer)}` : result
@@ -113,5 +115,16 @@ export default class Helper {
     const subRange = range / 100
     const result = temp / subRange
     return `${Math.floor(result)}`
+  }
+
+  static removeRedundantZeros(value) {
+    let flag = 0
+    for (let i = value.length - 1; i >= 0; i--) {
+      if (value[i] != 0) {
+        flag = i
+        break
+      }
+    }
+    return value.substring(0, flag + 1)
   }
 }
